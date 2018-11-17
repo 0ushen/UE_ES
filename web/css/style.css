@@ -1,0 +1,16 @@
+.roundborder
+{
+    border: black 1px solid;
+    border-radius: 5px;
+}
+
+#results-box td
+{
+    white-space: nowrap;
+}
+
+#member
+{
+    overflow: auto;
+    height: 400px;
+}
