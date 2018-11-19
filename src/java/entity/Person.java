@@ -6,7 +6,6 @@
 package entity;
 
 
-import java.util.*;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -23,14 +22,14 @@ public class Person implements Entity {
     private String city;
     private String postalCode;
     private String address;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private String email;
     private boolean isTeacher;
     
     public Person() {}
     
     public Person(Integer id, String firstName, String lastName, String country, String city,
-            String postalCode, String address, LocalDate dateOfBirth, String email,
+            String postalCode, String address, String dateOfBirth, String email,
             boolean isTeacher) {
         
         this.id = id;
@@ -46,6 +45,7 @@ public class Person implements Entity {
         
     }
     
+    @Override
     public Integer getId() {
         return id;
     }
@@ -74,12 +74,16 @@ public class Person implements Entity {
         return address;
     }
 
-    public LocalDate getDateOfBirth() {
+    public LocalDate getDateOfBirthObject() {
+        return LocalDate.parse(dateOfBirth);
+    }
+    
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
     
     public java.sql.Date getDateOfBirthSQL() {
-        java.sql.Date dateSQL = Date.valueOf(dateOfBirth);
+        java.sql.Date dateSQL = Date.valueOf(getDateOfBirthObject());
         return dateSQL;
     }
 
@@ -119,7 +123,7 @@ public class Person implements Entity {
         this.address = address;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

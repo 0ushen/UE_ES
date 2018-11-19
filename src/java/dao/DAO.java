@@ -50,8 +50,7 @@ public abstract class DAO<T extends Entity> {
         if (entity != null && entity.getId() != null) {
             try {
                 Statement stmt = conn.createStatement();
-                stmt.executeUpdate(
-                        deleteCommand + entity.getId());
+                stmt.executeUpdate(deleteCommand + entity.getId());
                 entityList.remove(entity);
             } catch (SQLException ex) {
                 Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,5 +81,7 @@ public abstract class DAO<T extends Entity> {
     public abstract ArrayList<T> load(ViewModel vm);
 
     public abstract void save(T e);
+    
+    public abstract void update(T e);
     
 }
