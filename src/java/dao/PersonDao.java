@@ -7,7 +7,8 @@ package dao;
 
 import entity.Person;
 import java.sql.*;
-import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ public class PersonDao extends DAO<Person> {
     
     @Override
     public ArrayList<Person> load() {
+        entityList.clear();
         
         try {
             ResultSet rs = conn.createStatement().executeQuery(
@@ -28,26 +30,27 @@ public class PersonDao extends DAO<Person> {
                   + " address, date_of_birth, email, is_teacher FROM person");
             
             while (rs.next()){
-                
-                LocalDate date;
+                //System.out.println("Starting " + rs.getString("first_name") + " " + rs.getString("last_name"));
+                String date;
                 try {
-                    date = rs.getDate("date_of_birth").toLocalDate();
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");  
+                    date = df.format(rs.getDate("date_of_birth")); 
                 } catch (NullPointerException e) {
-                    date = LocalDate.of(1, 1, 1);
+                    System.out.println("Error when getting date from db");
+                    date = "";
                 }
                 
-                
                 Person person = new Person(rs.getInt("person_id"),
-                        rs.getString("first_name"), rs.getString("last_name"),
-                        rs.getString("country"), rs.getString("city"),
-                        rs.getString("postal_code"), rs.getString("address"),
-                        date, rs.getString("email"),
-                        rs.getBoolean("is_teacher"));
+                    rs.getString("first_name"), rs.getString("last_name"),
+                    rs.getString("country"), rs.getString("city"),
+                    rs.getString("postal_code"), rs.getString("address"),
+                    date, rs.getString("email"),
+                    rs.getBoolean("is_teacher"));
                 
                 entityList.add(person);
             };
             
-        } catch (SQLException ex) {
+        } catch (SQLException | NullPointerException ex) {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -63,23 +66,90 @@ public class PersonDao extends DAO<Person> {
     public void save(Person e) {
         try {
             PreparedStatement st;
-
-            if(e.getId() == null) {
-                st = conn.prepareStatement(""
-                        + "INSERT INTO person "
-                        + "(first_name, last_name, country, city, postal_code,"
-                        + " address, date_of_birth, email, is_teacher) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+               
+            String query = "INSERT INTO person (first_name, last_name, ";
+            int i = 0;
+            if(!e.getCountry().equals("")){
+                query += "country, ";
+                i++;
             }
-            else{
-                st = conn.prepareStatement(""
-                        + "UPDATE person "
-                        + "SET first_name = ?, last_name = ?, country = ?, city = ?, "
-                        + "postal_code = ?, address = ?, date_of_birth = ?, email = ?, "
-                        + "is_teacher = ? "
-                        + "WHERE person_id = ?");
-                st.setInt(10, e.getId());
+            if(!e.getCity().equals("")){
+                query += "city, ";
+                i++;
             }
+            if(!e.getPostalCode().equals("")){
+                query += "postal_code, ";
+                i++;
+            }
+            if(!e.getAddress().equals("")){
+                query += "address, ";
+                i++;
+            }      
+            if(!e.getDateOfBirth().equals("")){
+                query += "date_of_birth, ";
+                i++;
+            }
+            if(!e.getEmail().equals("")){
+                query += "email, ";
+                i++;
+            }
+            query += "is_teacher) VALUES (?, ?, ";
+            for(int j = 0 ; j <= i ; j++){
+                if(j == i)
+                    query += "?)";
+                else
+                    query += "?, ";
+            }
+            
+            System.out.println(query);
+            st = conn.prepareStatement(query);
+            st.setString(1, e.getFirstName());
+            st.setString(2, e.getLastName());
+            i = 3;
+            if(!e.getCountry().equals("")){
+                st.setString(i, e.getCountry());
+                i++;
+            }
+            if(!e.getCity().equals("")){
+                st.setString(i, e.getCity());
+                i++;
+            }
+            if(!e.getPostalCode().equals("")){
+                st.setString(i, e.getPostalCode());
+                i++;
+            }
+            if(!e.getAddress().equals("")){
+                st.setString(i, e.getAddress());
+                i++;
+            }      
+            if(!e.getDateOfBirth().equals("")){
+                st.setDate(i, e.getDateOfBirthSQL());
+                i++;
+            }
+            if(!e.getEmail().equals("")){
+                st.setString(i, e.getEmail());
+                i++;
+            }
+            st.setBoolean(i, e.isTeacher());
+            st.executeUpdate();
+            st.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    public void update(Person e) {
+        try {
+            PreparedStatement st;
+            
+            st = conn.prepareStatement(""
+                    + "UPDATE person "
+                    + "SET first_name = ?, last_name = ?, country = ?, city = ?, "
+                    + "postal_code = ?, address = ?, date_of_birth = ?, email = ?, "
+                    + "is_teacher = ? "
+                    + "WHERE person_id = ?");
             st.setString(1, e.getFirstName());
             st.setString(2, e.getLastName());
             st.setString(3, e.getCountry());
@@ -89,8 +159,10 @@ public class PersonDao extends DAO<Person> {
             st.setDate(7, e.getDateOfBirthSQL());
             st.setString(8, e.getEmail());
             st.setBoolean(9, e.isTeacher());
+            st.setInt(10, e.getId());
             st.executeUpdate();
             st.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
