@@ -31,6 +31,7 @@ $(document).ready(function () {
                         date = new Date(dateString).toISOString().split('T')[0];
                     
                     htmlContent += '<tr class="clickable-row" data-href="#">' +
+                        '<td class="id">' + this.id + '</td>' +
                         '<td class="firstName">' + this.firstName + '</td>' +
                         '<td class="lastName">' + this.lastName + '</td>' +
                         '<td class="email">' + this.email + '</td>' +
@@ -75,6 +76,56 @@ $(document).ready(function () {
             success: function() {
                 console.log(person.firstName + " " + person.lastName +
                         " was succesfully added to the DB");
+            },
+            error: function(error) {
+                console.log("AJAX error in request : " + 
+                        JSON.stringify(error, null, 2));
+            },
+            dataType: "json"
+        });
+        
+    });
+    
+    $('#btnSearch').click(function (){
+        
+        var inputs = $('#search')
+                .find(':input:not([type=submit]):not([type=checkbox])');
+        inputs.each(function() {
+            person[$(this).attr('id')] = $(this).val();
+        });
+        person["isTeacher"] = $('#search #isTeacher').is(':checked');
+        
+        var json = JSON.stringify(person);
+        $.ajax({
+            url: url, 
+            data: {Action: "getSearch", JSON: json},
+            success: function(response) {
+                var htmlContent, YON, date, dateString;
+                
+                $.each(response, function(){
+                    YON = this.isTeacher ? 'YES' : 'NO';
+                    
+                    dateString = this.dateOfBirth;
+                    if(dateString === "")
+                        date = "undefined";
+                    else
+                        date = new Date(dateString).toISOString().split('T')[0];
+                    
+                    htmlContent += '<tr class="clickable-row" data-href="#">' +
+                        '<td class="id">' + this.id + '</td>' +
+                        '<td class="firstName">' + this.firstName + '</td>' +
+                        '<td class="lastName">' + this.lastName + '</td>' +
+                        '<td class="email">' + this.email + '</td>' +
+                        '<td class="country">' + this.country + '</td>' +
+                        '<td class="city">' + this.city + '</td>' +
+                        '<td class="postalCode">' + this.postalCode + '</td>' +
+                        '<td class="address">' + this.address + '</td>' +
+                        '<td class="dateOfBirth">' + 
+                        date + '</td>' +
+                        '<td class="isTeacher">' + YON + '</td>' + 
+                        '</tr>';
+                    buildTable(htmlContent);
+                });
             },
             error: function(error) {
                 console.log("AJAX error in request : " + 
@@ -147,6 +198,32 @@ $(document).ready(function () {
                     else
                         $('#isTeacher-d').prop('checked', false);
                     
+                    // Event handler for a click on update button
+                    $('#btnUpdate').click(function(){
+                        var inputs = $('#updateForm')
+                                .find(':input:not([type=submit]):not([type=checkbox])');
+                        inputs.each(function() {
+                            person[$(this).attr('id')] = $(this).val();
+                        });
+                        person["isTeacher"] = $('#updateForm #isTeacher').is(':checked');
+                        person["id"] = clickedRow.find('.id').html();
+                        console.log(person);
+
+                        var json = JSON.stringify(person);
+                        $.ajax({
+                            url: url,
+                            data: {Action: "doUpdate", JSON: json},
+                            success: function() {
+                                console.log(person.firstName + " " + person.lastName +
+                                        " was succesfully changed in the DB");
+                            },
+                            error: function(error) {
+                                console.log("AJAX error in request : " + 
+                                        JSON.stringify(error, null, 2));
+                            },
+                            dataType: "json"
+                        });
+                    });                    
                 });
             }
             else{

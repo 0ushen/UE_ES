@@ -58,8 +58,133 @@ public class PersonDao extends DAO<Person> {
     }
 
     @Override
-    public ArrayList<Person> load(ViewModel vm) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<Person> load(Person e) {
+        entityList.clear();
+        
+        try {
+            PreparedStatement st;
+               
+            String query = "SELECT person_id, first_name, last_name, country, city, postal_code,"
+                  + " address, date_of_birth, email, is_teacher FROM person WHERE ";
+            int i = 0;
+            if(e.getId() != null){
+                query += "person_id = ? AND ";
+                i++;
+            }
+            if(!e.getFirstName().equals("")){
+                query += "first_name = ? AND ";
+                i++;
+            }
+            if(!e.getLastName().equals("")){
+                query += "last_name = ? AND ";
+                i++;
+            }
+            if(!e.getCountry().equals("")){
+                query += "country = ? AND ";
+                i++;
+            }
+            if(!e.getCity().equals("")){
+                query += "city = ? AND ";
+                i++;
+            }
+            if(!e.getPostalCode().equals("")){
+                query += "postal_code = ? AND ";
+                i++;
+            }
+            if(!e.getAddress().equals("")){
+                query += "address = ? AND ";
+                i++;
+            }      
+            if(!e.getDateOfBirth().equals("")){
+                query += "date_of_birth = ? AND ";
+                i++;
+            }
+            if(!e.getEmail().equals("")){
+                query += "email = ? AND ";
+                i++;
+            }
+            query += "is_teacher = ?;";
+            
+            System.out.println(query);
+            st = conn.prepareStatement(query);
+           
+            i = 1;
+            if(e.getId() != null){
+                st.setInt(i, e.getId());
+                i++;
+            }
+            if(!e.getFirstName().equals("")){
+                st.setString(i, e.getFirstName());
+                i++;
+            }
+            if(!e.getLastName().equals("")){
+                st.setString(i, e.getLastName());
+                i++;
+            }
+            if(!e.getCountry().equals("")){
+                st.setString(i, e.getCountry());
+                i++;
+            }
+            if(!e.getCity().equals("")){
+                st.setString(i, e.getCity());
+                i++;
+            }
+            if(!e.getPostalCode().equals("")){
+                st.setString(i, e.getPostalCode());
+                i++;
+            }
+            if(!e.getAddress().equals("")){
+                st.setString(i, e.getAddress());
+                i++;
+            }      
+            if(!e.getDateOfBirth().equals("")){
+                st.setDate(i, e.getDateOfBirthSQL());
+                i++;
+            }
+            if(!e.getEmail().equals("")){
+                st.setString(i, e.getEmail());
+                i++;
+            }
+            st.setBoolean(i, e.isTeacher());
+            ResultSet rs = st.executeQuery();
+            
+            while (rs.next()){
+                //System.out.println("Starting " + rs.getString("first_name") + " " + rs.getString("last_name"));
+                String date;
+                try {
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");  
+                    date = df.format(rs.getDate("date_of_birth")); 
+                } catch (NullPointerException ex) {
+                    System.out.println("Error when getting date from db");
+                    date = "";
+                }
+                
+                Person person = new Person(rs.getInt("person_id"),
+                    rs.getString("first_name"), rs.getString("last_name"),
+                    rs.getString("country"), rs.getString("city"),
+                    rs.getString("postal_code"), rs.getString("address"),
+                    date, rs.getString("email"),
+                    rs.getBoolean("is_teacher"));
+                
+                
+                
+                entityList.add(person);
+            };
+            
+            st.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(Person person : entityList) {
+            System.out.println("Prenom : " + person.getFirstName() + " | Nom : " 
+                    + person.getLastName() + " | Email : " + person.getEmail() + 
+                    " | Date de naissance : " + person.getDateOfBirth() + 
+                    " | Teacher : " + person.isTeacher());
+        }
+        
+        return entityList;
     }
 
     @Override

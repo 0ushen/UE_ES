@@ -18,6 +18,7 @@ import ui.viewmodel.ViewModel;
 /**
  *
  * @author Samir
+ * @param <T>
  */
 public abstract class DAO<T extends Entity> {
     
@@ -78,7 +79,7 @@ public abstract class DAO<T extends Entity> {
 
     public abstract ArrayList<T> load();
     
-    public abstract ArrayList<T> load(ViewModel vm);
+    public abstract ArrayList<T> load(T e);
 
     public abstract void save(T e);
     
