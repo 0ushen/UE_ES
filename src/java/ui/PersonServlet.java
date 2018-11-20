@@ -10,9 +10,6 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import entity.Person;
 import java.util.ArrayList;
 /**
@@ -37,114 +34,36 @@ public class PersonServlet extends HttpServlet {
         }
         
         String action = request.getParameter("Action");
-        String json;
-        JsonParser parser;
-        JsonElement jsonTree;
+        String json = request.getParameter("JSON");
         ArrayList<Person> list;
         if(action != null){
             switch (action){
                 case "getAll" :
                     list = pDao.load();
-                    json = new Gson().toJson(list);
-                    WriteResponse(response, json);
+                    String jsonList = new Gson().toJson(list);
+                    WriteResponse(response, jsonList);
                     break;
             
                 case "doSave" :
-                    json = request.getParameter("JSON");
-                    System.out.println(json);
-                    parser = new JsonParser();
-                    jsonTree = parser.parse(json);
-                    if(jsonTree.isJsonObject()) {
-                        JsonObject person = jsonTree.getAsJsonObject();
-
-                        boolean isTeacher = person.get("isTeacher").getAsString()
-                                .equals("true");
-
-                        Person personToAdd = new Person(null, 
-                                person.get("firstName").getAsString(),
-                                person.get("lastName").getAsString(), 
-                                person.get("country").getAsString(), 
-                                person.get("city").getAsString(),
-                                person.get("postalCode").getAsString(), 
-                                person.get("address").getAsString(),
-                                person.get("dateOfBirth").getAsString(),
-                                person.get("email").getAsString(), isTeacher);
-
-                        System.out.println("Prenom : " + personToAdd.getFirstName() +
-                                " | Nom : " + personToAdd.getLastName() + 
-                                " | Email : " + personToAdd.getEmail() + 
-                                " | Date de naissance : " + 
-                                personToAdd.getDateOfBirth() + " | isTeacher : " +
-                                personToAdd.isTeacher());
-
-                        pDao.save(personToAdd);
-                    }
+                    Person personToAdd = new Person(json);
+                    pDao.save(personToAdd);
                     break;
                 
                 case "getSearch" :
-                    json = request.getParameter("JSON");
-                    System.out.println(json);
-                    parser = new JsonParser();
-                    jsonTree = parser.parse(json);
-                    if(jsonTree.isJsonObject()) {
-                        JsonObject person = jsonTree.getAsJsonObject();
-
-                        boolean isTeacher = person.get("isTeacher").getAsString()
-                                .equals("true");
-
-                        Person personToSearch = new Person(null, 
-                                person.get("firstName").getAsString(),
-                                person.get("lastName").getAsString(), 
-                                person.get("country").getAsString(), 
-                                person.get("city").getAsString(),
-                                person.get("postalCode").getAsString(), 
-                                person.get("address").getAsString(),
-                                person.get("dateOfBirth").getAsString(),
-                                person.get("email").getAsString(), isTeacher);
-
-                        System.out.println("Prenom : " + personToSearch.getFirstName() +
-                                " | Nom : " + personToSearch.getLastName() + 
-                                " | Email : " + personToSearch.getEmail() + 
-                                " | Date de naissance : " + 
-                                personToSearch.getDateOfBirth() + " | isTeacher : " +
-                                personToSearch.isTeacher());
-
-                        list = pDao.load(personToSearch);
-                        json = new Gson().toJson(list);
-                        WriteResponse(response, json);
-                    }
+                    Person personToSearch = new Person(json);
+                    list = pDao.load(personToSearch);
+                    json = new Gson().toJson(list);
+                    WriteResponse(response, json);
                     break;
                     
                 case "doUpdate" :
-                    json = request.getParameter("JSON");
-                    System.out.println(json);
-                    parser = new JsonParser();
-                    jsonTree = parser.parse(json);
-                    if(jsonTree.isJsonObject()) {
-                        JsonObject person = jsonTree.getAsJsonObject();
-
-                        boolean isTeacher = person.get("isTeacher").getAsString()
-                                .equals("true");
-                        Integer id = person.get("id").getAsInt();
-                        Person personToUpdate = new Person(id, 
-                                person.get("firstName").getAsString(),
-                                person.get("lastName").getAsString(), 
-                                person.get("country").getAsString(), 
-                                person.get("city").getAsString(),
-                                person.get("postalCode").getAsString(), 
-                                person.get("address").getAsString(),
-                                person.get("dateOfBirth").getAsString(),
-                                person.get("email").getAsString(), isTeacher);
-
-                        System.out.println("Prenom : " + personToUpdate.getFirstName() +
-                                " | Nom : " + personToUpdate.getLastName() + 
-                                " | Email : " + personToUpdate.getEmail() + 
-                                " | Date de naissance : " + 
-                                personToUpdate.getDateOfBirth() + " | isTeacher : " +
-                                personToUpdate.isTeacher());
-
-                        pDao.update(personToUpdate);
-                    }
+                    Person personToUpdate = new Person(json);
+                    pDao.update(personToUpdate);
+                    break;
+                
+                case "doDelete" :
+                    Integer id = Integer.parseInt(request.getParameter("id"));
+                    pDao.delete(id);
                     break;
                 
                 default :
@@ -172,5 +91,6 @@ public class PersonServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
 }
 

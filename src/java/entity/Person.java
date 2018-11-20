@@ -6,6 +6,9 @@
 package entity;
 
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -44,6 +47,27 @@ public class Person implements Entity {
         this.isTeacher = isTeacher;
         
     }
+    
+    public Person(String json){
+        
+        JsonParser parser = new JsonParser();
+        JsonElement jsonTree = parser.parse(json);
+        if(jsonTree.isJsonObject()) {
+            JsonObject person = jsonTree.getAsJsonObject();
+            
+            this.id = person.get("id").getAsInt(); 
+            this.firstName = person.get("firstName").getAsString();
+            this.lastName = person.get("lastName").getAsString();
+            this.firstName = person.get("country").getAsString();
+            this.city = person.get("city").getAsString();
+            this.postalCode = person.get("postalCode").getAsString();
+            this.address = person.get("address").getAsString();
+            this.dateOfBirth = person.get("dateOfBirth").getAsString();
+            this.email = person.get("email").getAsString();
+            this.isTeacher = person.get("isTeacher").getAsString().equals("true");
+        }
+    }
+            
     
     @Override
     public Integer getId() {

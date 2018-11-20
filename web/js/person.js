@@ -18,38 +18,8 @@ $(document).ready(function () {
         $.ajax({
             url: url, 
             data: {Action: "getAll"},
-            success: function(response) {
-                var htmlContent, YON, date, dateString;
-                
-                $.each(response, function(){
-                    YON = this.isTeacher ? 'YES' : 'NO';
-                    
-                    dateString = this.dateOfBirth;
-                    if(dateString === "")
-                        date = "undefined";
-                    else
-                        date = new Date(dateString).toISOString().split('T')[0];
-                    
-                    htmlContent += '<tr class="clickable-row" data-href="#">' +
-                        '<td class="id">' + this.id + '</td>' +
-                        '<td class="firstName">' + this.firstName + '</td>' +
-                        '<td class="lastName">' + this.lastName + '</td>' +
-                        '<td class="email">' + this.email + '</td>' +
-                        '<td class="country">' + this.country + '</td>' +
-                        '<td class="city">' + this.city + '</td>' +
-                        '<td class="postalCode">' + this.postalCode + '</td>' +
-                        '<td class="address">' + this.address + '</td>' +
-                        '<td class="dateOfBirth">' + 
-                        date + '</td>' +
-                        '<td class="isTeacher">' + YON + '</td>' + 
-                        '</tr>';
-                    buildTable(htmlContent);
-                });
-            },
-            error: function(error) {
-                console.log("AJAX error in request : " + 
-                        JSON.stringify(error, null, 2));
-            },
+            success: buildTable,
+            error: showAjaxError,
             dataType: "json"
         });
 
@@ -62,14 +32,8 @@ $(document).ready(function () {
         var ln = $('#lastName');
         ln.val() ? ln.removeClass('is-invalid') : ln.addClass('is-invalid') ;
         
-        var inputs = $('#search')
-                .find(':input:not([type=submit]):not([type=checkbox])');
-        inputs.each(function() {
-            person[$(this).attr('id')] = $(this).val();
-        });
-        person["isTeacher"] = $('#search #isTeacher').is(':checked');
-        
-        var json = JSON.stringify(person);
+        var json = getJsonFromInput();
+
         $.ajax({
             url: url,
             data: {Action: "doSave", JSON: json},
@@ -77,60 +41,20 @@ $(document).ready(function () {
                 console.log(person.firstName + " " + person.lastName +
                         " was succesfully added to the DB");
             },
-            error: function(error) {
-                console.log("AJAX error in request : " + 
-                        JSON.stringify(error, null, 2));
-            },
-            dataType: "json"
+            error: showAjaxError
         });
         
     });
     
     $('#btnSearch').click(function (){
         
-        var inputs = $('#search')
-                .find(':input:not([type=submit]):not([type=checkbox])');
-        inputs.each(function() {
-            person[$(this).attr('id')] = $(this).val();
-        });
-        person["isTeacher"] = $('#search #isTeacher').is(':checked');
+        var json = getJsonFromInput();
         
-        var json = JSON.stringify(person);
         $.ajax({
             url: url, 
             data: {Action: "getSearch", JSON: json},
-            success: function(response) {
-                var htmlContent, YON, date, dateString;
-                
-                $.each(response, function(){
-                    YON = this.isTeacher ? 'YES' : 'NO';
-                    
-                    dateString = this.dateOfBirth;
-                    if(dateString === "")
-                        date = "undefined";
-                    else
-                        date = new Date(dateString).toISOString().split('T')[0];
-                    
-                    htmlContent += '<tr class="clickable-row" data-href="#">' +
-                        '<td class="id">' + this.id + '</td>' +
-                        '<td class="firstName">' + this.firstName + '</td>' +
-                        '<td class="lastName">' + this.lastName + '</td>' +
-                        '<td class="email">' + this.email + '</td>' +
-                        '<td class="country">' + this.country + '</td>' +
-                        '<td class="city">' + this.city + '</td>' +
-                        '<td class="postalCode">' + this.postalCode + '</td>' +
-                        '<td class="address">' + this.address + '</td>' +
-                        '<td class="dateOfBirth">' + 
-                        date + '</td>' +
-                        '<td class="isTeacher">' + YON + '</td>' + 
-                        '</tr>';
-                    buildTable(htmlContent);
-                });
-            },
-            error: function(error) {
-                console.log("AJAX error in request : " + 
-                        JSON.stringify(error, null, 2));
-            },
+            success: buildTable,
+            error: showAjaxError,
             dataType: "json"
         });
         
@@ -139,12 +63,37 @@ $(document).ready(function () {
     /* This function create an html table which will be used to display database
      * info. */
 
-    function buildTable(htmlContent) {
-
-        // Insert html content into the table.
-
-        $('tbody').html(htmlContent);
+    function buildTable(response) {
         
+        var htmlContent, YON, date, dateString;
+                
+        $.each(response, function(){
+            YON = this.isTeacher ? 'YES' : 'NO';
+
+            dateString = this.dateOfBirth;
+            if(dateString === "")
+                date = "undefined";
+            else
+                date = new Date(dateString).toISOString().split('T')[0];
+
+            htmlContent += '<tr class="clickable-row" data-href="#">' +
+                '<td class="id">' + this.id + '</td>' +
+                '<td class="firstName">' + this.firstName + '</td>' +
+                '<td class="lastName">' + this.lastName + '</td>' +
+                '<td class="email">' + this.email + '</td>' +
+                '<td class="country">' + this.country + '</td>' +
+                '<td class="city">' + this.city + '</td>' +
+                '<td class="postalCode">' + this.postalCode + '</td>' +
+                '<td class="address">' + this.address + '</td>' +
+                '<td class="dateOfBirth">' + date + '</td>' +
+                '<td class="isTeacher">' + YON + '</td>' + 
+                '</tr>';
+                
+            // Insert html content into the table.
+
+            $('tbody').html(htmlContent);
+        });
+
         // Event handler for a click on a row.
 
         $('.clickable-row').click(function() {
@@ -198,32 +147,58 @@ $(document).ready(function () {
                     else
                         $('#isTeacher-d').prop('checked', false);
                     
-                    // Event handler for a click on update button
+                    /* This update event send data in the details form to the 
+                     * server.
+                     * The server will then update this person details based on
+                     * what the user typed in the form. */
+                    
                     $('#btnUpdate').click(function(){
+                        
+                        // Create a person object from the input data.
                         var inputs = $('#updateForm')
                                 .find(':input:not([type=submit]):not([type=checkbox])');
                         inputs.each(function() {
-                            person[$(this).attr('id')] = $(this).val();
+                            person[$(this).attr('id').replace('-d', '')] = $(this).val();
                         });
                         person["isTeacher"] = $('#updateForm #isTeacher').is(':checked');
                         person["id"] = clickedRow.find('.id').html();
-                        console.log(person);
-
+                        
+                        // Person object is sent to the server as json.
                         var json = JSON.stringify(person);
                         $.ajax({
                             url: url,
                             data: {Action: "doUpdate", JSON: json},
                             success: function() {
-                                console.log(person.firstName + " " + person.lastName +
+                                console.log(clickedRow.find('.firstName').html() + " " 
+                                        + clickedRow.find('.lastName').html() +
                                         " was succesfully changed in the DB");
+                                $('#btnListAll').trigger('click');
                             },
-                            error: function(error) {
-                                console.log("AJAX error in request : " + 
-                                        JSON.stringify(error, null, 2));
-                            },
-                            dataType: "json"
+                            error: showAjaxError
                         });
-                    });                    
+                    });
+                    
+                    /* This event will ask the server to delete the person in 
+                     * the detail box from the database. */
+                    
+                    $('#btnDelete').click(function(){
+                        var idToDelete = clickedRow.find('.id').html();
+                        // The person id is sent to the server.
+                        $.ajax({
+                            url: url,
+                            data: {Action: "doDelete", id: idToDelete},
+                            success: function() {
+                                console.log(clickedRow.find('.firstName').html() + " " 
+                                        + clickedRow.find('.lastName').html() +
+                                        " was succesfully deleted from the DB");
+                                $('#details-box').html('');
+                                $('#results-box')
+                                        .toggleClass('col-lg-12 col-lg-6');
+                                $('#btnListAll').trigger('click');
+                            },
+                            error: showAjaxError
+                        });
+                    });
                 });
             }
             else{
@@ -231,5 +206,21 @@ $(document).ready(function () {
                 $('#results-box').toggleClass('col-lg-12 col-lg-6');
             }
         });
+    }
+    
+    function getJsonFromInput() {
+        
+        var inputs = $('#search')
+                .find(':input:not([type=submit]):not([type=checkbox])');
+        inputs.each(function() {
+            person[$(this).attr('id')] = $(this).val();
+        });
+        person["isTeacher"] = $('#search #isTeacher').is(':checked');
+        
+        return JSON.stringify(person);
+    }
+    
+    function showAjaxError(error) {
+        console.log("AJAX error in request : " + JSON.stringify(error, null, 2));
     }
 });
