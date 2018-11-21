@@ -123,7 +123,7 @@ $(document).ready(function () {
     
     /* This function will build a person object based on all the info 
      * in the search form.
-     * It will then return this ibject as a json string.*/
+     * It will then return this object as a json string.*/
     function getJsonFromInput() {
         
         var inputs = $('#search')
@@ -131,7 +131,7 @@ $(document).ready(function () {
         inputs.each(function() {
             person[$(this).attr('id')] = $(this).val();
         });
-        person["isTeacher"] = $('#search #isTeacher').is(':checked');
+        person.isTeacher = $('#search #isTeacher').is(':checked');
         
         console.log(person);
         
@@ -142,20 +142,13 @@ $(document).ready(function () {
      * info. */
     function buildTable(response) {
         
-        var htmlContent, date, dateString, yesOrNo;
+        /* For each person in the server response an html row will be created
+         * and put into the htmlContent variable .*/
+        var htmlContent, yesOrNo;
         $.each(response, function(){
             // The boolean value is converted to a string.
             yesOrNo = this.isTeacher ? 'YES' : 'NO';
             
-            /* The date value can be undefined in the database, if it is the 
-             * server will send an empty string.
-             * */
-            dateString = this.dateOfBirth;
-            if(dateString === "")
-                date = "undefined";
-            else
-                date = new Date(dateString).toISOString().split('T')[0];
-
             htmlContent += '<tr class="clickable-row" data-href="#">' +
                 '<td class="id hide">' + this.id + '</td>' +
                 '<td class="firstName">' + this.firstName + '</td>' +
@@ -165,20 +158,23 @@ $(document).ready(function () {
                 '<td class="city">' + this.city + '</td>' +
                 '<td class="postalCode">' + this.postalCode + '</td>' +
                 '<td class="address">' + this.address + '</td>' +
-                '<td class="dateOfBirth">' + date + '</td>' +
+                '<td class="dateOfBirth">' + this.dateOfBirth + '</td>' +
                 '<td class="isTeacher">' + yesOrNo + '</td>' + 
-                '</tr>';
-                
-            // Insert html content into the table.
-
-            $('tbody').html(htmlContent);
+                '</tr>';     
         });
+        
+        // Every row is put into the table body.
+        $('tbody').html(htmlContent);
 
-        // Event handler for a click on a row.
-
+        /* If the user click on a row a detailed interface based on the data
+         * from this row is created and shown. */
         $('.clickable-row').click(toggleDetailsBox);
     }
     
+    /* This function will create&show or empty&hide a detail box. 
+     * A detail box is a user interface which contains the data of a person
+     * from the table. 
+     * This person is the one from the row the user clicked on*/
     function toggleDetailsBox() {
         
         /* I have to save $(this) value into a variable or it will be out 
@@ -247,11 +243,15 @@ $(document).ready(function () {
           });
         }
         else{
+            /* If the user clicked on the table while there is a detail box,
+             * the detail box html content is emptied and the table takes all
+             * the width possible on large screens */
             $('#details-box').html('');
             $('#results-box').toggleClass('col-lg-12 col-lg-6');
         }
     }
     
+    // Show a message in the console if the ajax request returns an error.
     function showAjaxError(error) {
         console.log("AJAX error in request : " + JSON.stringify(error, null, 2));
     }

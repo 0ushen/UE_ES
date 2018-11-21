@@ -228,7 +228,12 @@ public class PersonDao extends DAO<Person> {
             st.setString(4, e.getCity());
             st.setString(5, e.getPostalCode());
             st.setString(6, e.getAddress());
-            st.setDate(7, e.getDateOfBirthSQL());
+            
+            if(e.getDateOfBirth().equals(""))
+                st.setDate(7, null);
+            else
+                st.setDate(7, e.getDateOfBirthSQL());
+            
             st.setString(8, e.getEmail());
             st.setBoolean(9, e.isTeacher());
             st.setInt(10, e.getId());
@@ -271,15 +276,14 @@ public class PersonDao extends DAO<Person> {
                         rs.getString("first_name"), rs.getString("last_name"),
                         rs.getString("country"), rs.getString("city"),
                         rs.getString("postal_code"), rs.getString("address"),
-                        date, rs.getString("email"),
-                        rs.getBoolean("is_teacher"));
+                        date, rs.getString("email"), rs.getBoolean("is_teacher"));
                 
                 entityList.add(person);
             }
             
+            System.out.println("****PERSONS IN ENTITYLIST****\n");
             entityList.forEach((person) -> {
-                System.out.println("***PERSONS IN ENTITYLIST****\n" +
-                        "first name : " + person.getFirstName() +
+                System.out.println("first name : " + person.getFirstName() +
                         " | last name : " + person.getLastName() + 
                         " | email : " + person.getEmail() + 
                         " | date of birth : " + person.getDateOfBirth() + 

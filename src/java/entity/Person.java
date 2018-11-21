@@ -36,14 +36,14 @@ public class Person implements Entity {
             String email, boolean isTeacher) {
         
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.country = country;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
+        this.firstName = firstName == null ? "" : firstName;
+        this.lastName = lastName == null ? "" : lastName;
+        this.country = country == null ? "" : country;
+        this.city = city == null ? "" : city;
+        this.postalCode = postalCode == null ? "" : postalCode;
+        this.address = address == null ? "" : address;
+        this.dateOfBirth = dateOfBirth == null ? "" : dateOfBirth;
+        this.email = email == null ? "" : email;
         this.isTeacher = isTeacher;
         
     }

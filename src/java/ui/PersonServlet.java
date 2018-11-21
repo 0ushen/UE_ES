@@ -42,6 +42,7 @@ public class PersonServlet extends HttpServlet {
                 case "getAll" :
                     list = pDao.load();
                     String jsonList = new Gson().toJson(list);
+                    System.out.println("\nSending this json string :\n" + jsonList);
                     WriteResponse(response, jsonList);
                     break;
             
@@ -54,7 +55,7 @@ public class PersonServlet extends HttpServlet {
                     Person personToSearch = new Person(json);
                     list = pDao.load(personToSearch);
                     json = new Gson().toJson(list);
-                    System.out.println(json);
+                    System.out.println("Sending this json string :\n" + json);
                     WriteResponse(response, json);
                     break;
                     
