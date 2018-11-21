@@ -31,9 +31,9 @@ public class Person implements Entity {
     
     public Person() {}
     
-    public Person(Integer id, String firstName, String lastName, String country, String city,
-            String postalCode, String address, String dateOfBirth, String email,
-            boolean isTeacher) {
+    public Person(Integer id, String firstName, String lastName, String country, 
+            String city, String postalCode, String address, String dateOfBirth, 
+            String email, boolean isTeacher) {
         
         this.id = id;
         this.firstName = firstName;
@@ -55,10 +55,10 @@ public class Person implements Entity {
         if(jsonTree.isJsonObject()) {
             JsonObject person = jsonTree.getAsJsonObject();
             
-            this.id = person.get("id").getAsInt(); 
+            this.id = person.has("id") ? person.get("id").getAsInt() : null; 
             this.firstName = person.get("firstName").getAsString();
             this.lastName = person.get("lastName").getAsString();
-            this.firstName = person.get("country").getAsString();
+            this.country = person.get("country").getAsString();
             this.city = person.get("city").getAsString();
             this.postalCode = person.get("postalCode").getAsString();
             this.address = person.get("address").getAsString();
@@ -97,13 +97,13 @@ public class Person implements Entity {
     public String getAddress() {
         return address;
     }
-
-    public LocalDate getDateOfBirthObject() {
-        return LocalDate.parse(dateOfBirth);
-    }
     
     public String getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public LocalDate getDateOfBirthObject() {
+        return LocalDate.parse(dateOfBirth);
     }
     
     public java.sql.Date getDateOfBirthSQL() {

@@ -35,6 +35,7 @@ public class PersonServlet extends HttpServlet {
         
         String action = request.getParameter("Action");
         String json = request.getParameter("JSON");
+        System.out.println(json);
         ArrayList<Person> list;
         if(action != null){
             switch (action){
@@ -53,6 +54,7 @@ public class PersonServlet extends HttpServlet {
                     Person personToSearch = new Person(json);
                     list = pDao.load(personToSearch);
                     json = new Gson().toJson(list);
+                    System.out.println(json);
                     WriteResponse(response, json);
                     break;
                     

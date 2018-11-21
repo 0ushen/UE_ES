@@ -4,6 +4,10 @@
     border-radius: 5px;
 }
 
+.hide{
+    display: none;
+}
+
 #results-box td
 {
     white-space: nowrap;
