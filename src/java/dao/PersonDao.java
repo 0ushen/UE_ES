@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import entity.Person;
@@ -12,37 +7,46 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ui.viewmodel.PersonSearchVM;
 
-/**
- *
- * @author Samir
+/*
+ * @author Samir Benlafya
  */
+
 public class PersonDao extends DAO<Person> {
     
+    /* Load each person from the person table into an ArrayList, this entityList
+     * is a protected variable in the parent class DAO. */
     @Override
     public ArrayList<Person> load() {
         
-        entityList.clear();
-        
         try {
+            // Execute an SQL query on the db and catch his result.
             ResultSet rs = conn.createStatement().executeQuery(
                     "SELECT person_id, first_name, last_name, country, city, "
                   + "postal_code, address, date_of_birth, email, is_teacher "
                   + "FROM person");
             
+            /* Results coming raw from the database will be processed into one or
+             * more Person entities which will be added into entityList. */
             buildPersonListFromDB(rs);
+            
         } catch (SQLException | NullPointerException ex) {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        // entityList now contains all the data we asked for as Person objects.
         return entityList;
     }
-
+    
+    /* Load each person from the person table that match the info coming from 
+     * the viewmodel.*/
     @Override
-    public ArrayList<Person> load(Person e) {
-        PreparedStatement st;
+    public ArrayList<Person> load(PersonSearchVM vm) {
         
         try {
+            /* Need to build the query first. Some fields may be empty and should
+             * not be put into the query. */
             String query = "SELECT "
                     + "person_id, "
                     + "first_name, "
@@ -56,78 +60,83 @@ public class PersonDao extends DAO<Person> {
                     + "FROM person "
                     + "WHERE ";
             
-            if(e.getId() != null)
-                query += "person_id = ? AND ";
-                
-            if(!e.getFirstName().equals(""))
+            if(!vm.getFirstName().equals(""))
                 query += "first_name = ? AND ";
                 
-            if(!e.getLastName().equals(""))
+            if(!vm.getLastName().equals(""))
                 query += "last_name = ? AND ";
                 
-            if(!e.getCountry().equals(""))
+            if(!vm.getCountry().equals(""))
                 query += "country = ? AND ";
                 
-            if(!e.getCity().equals(""))
+            if(!vm.getCity().equals(""))
                 query += "city = ? AND ";
                 
-            if(!e.getPostalCode().equals(""))
+            if(!vm.getPostalCode().equals(""))
                 query += "postal_code = ? AND ";
                 
-            if(!e.getAddress().equals(""))
+            if(!vm.getAddress().equals(""))
                 query += "address = ? AND ";
                   
-            if(!e.getDateOfBirth().equals(""))
+            if(!vm.getDateOfBirth().equals(""))
                 query += "date_of_birth = ? AND ";
                 
-            if(!e.getEmail().equals(""))
+            if(!vm.getEmail().equals(""))
                 query += "email = ? AND ";
-                
+            
+            /* From my view , whether a person is a teacher or not is always
+             * mentionned. (not ideal) */
             query += "is_teacher = ?;";
             
             System.out.println("Query in load(E) : " + query);
             
-            st = conn.prepareStatement(query);
+            // Using the query to build a Prepared Statement.
+            PreparedStatement st = conn.prepareStatement(query);
             
+            // An index is used so i can keep count on parameters.
             int i = 1;
-            if(e.getId() != null){
-                st.setInt(i, e.getId());
+            
+            /* Each field is checked and if it's not empty, it's value is set as
+               a parameter in the request. */
+            if(!vm.getFirstName().equals("")){
+                st.setString(i, vm.getFirstName());
                 i++;
             }
-            if(!e.getFirstName().equals("")){
-                st.setString(i, e.getFirstName());
+            if(!vm.getLastName().equals("")){
+                st.setString(i, vm.getLastName());
                 i++;
             }
-            if(!e.getLastName().equals("")){
-                st.setString(i, e.getLastName());
+            if(!vm.getCountry().equals("")){
+                st.setString(i, vm.getCountry());
                 i++;
             }
-            if(!e.getCountry().equals("")){
-                st.setString(i, e.getCountry());
+            if(!vm.getCity().equals("")){
+                st.setString(i, vm.getCity());
                 i++;
             }
-            if(!e.getCity().equals("")){
-                st.setString(i, e.getCity());
+            if(!vm.getPostalCode().equals("")){
+                st.setString(i, vm.getPostalCode());
                 i++;
             }
-            if(!e.getPostalCode().equals("")){
-                st.setString(i, e.getPostalCode());
-                i++;
-            }
-            if(!e.getAddress().equals("")){
-                st.setString(i, e.getAddress());
+            if(!vm.getAddress().equals("")){
+                st.setString(i, vm.getAddress());
                 i++;
             }      
-            if(!e.getDateOfBirth().equals("")){
-                st.setDate(i, e.getDateOfBirthSQL());
+            if(!vm.getDateOfBirth().equals("")){
+                st.setDate(i, vm.getDateOfBirthSQL());
                 i++;
             }
-            if(!e.getEmail().equals("")){
-                st.setString(i, e.getEmail());
+            if(!vm.getEmail().equals("")){
+                st.setString(i, vm.getEmail());
                 i++;
             }
-            st.setBoolean(i, e.isTeacher());
             
+            //As i mentionned isTeacher is a mandatory search parameter.
+            st.setBoolean(i, vm.isTeacher());
+            
+            /* Execute the query and it's raw results are processed into one or
+             * more Person entities. Eeach one of them is put into the 
+             * entityList. */
             ResultSet rs = st.executeQuery();
             buildPersonListFromDB(rs);
             
@@ -137,13 +146,16 @@ public class PersonDao extends DAO<Person> {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        // entityList now contains all the data we asked for as Person objects.
         return entityList;
     }
-
+    
+    // Save this Person in the database.
     @Override
     public void save(Person e) {
         
         try {
+            // Building the query
             String query = "INSERT INTO person ("
                     + "first_name, "
                     + "last_name, "
@@ -156,9 +168,14 @@ public class PersonDao extends DAO<Person> {
                     + "is_teacher)"
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
             
+            // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
             
+            //I use an index so i can add or delete a parameter more freely.
             int i = 1;
+            
+            /* Each input is checked so if it contains an empty string , 
+             * it's value will be put as null in the db instead. */
             String firstName = e.getFirstName().equals("") ? null : e.getFirstName();
             st.setString(i++, firstName);
             String lastName = e.getLastName().equals("") ? null : e.getLastName();
@@ -175,8 +192,10 @@ public class PersonDao extends DAO<Person> {
             st.setDate(i++, dateOfBirthSQL);
             String email = e.getEmail().equals("") ? null : e.getEmail();
             st.setString(i++, email);
+            // As always isTeacher parameter is mandatory :(.
             st.setBoolean(i++, e.isTeacher());
             
+            // Prepared statement is executed.
             st.executeUpdate();
             
             st.close();
@@ -186,10 +205,12 @@ public class PersonDao extends DAO<Person> {
         }
     }
     
+    // Update a specific person using his id. 
     @Override
     public void update(Person e) {
         
         try {
+            // Building the query.
             String query =""
                     + "UPDATE person "
                     + "SET "
@@ -204,9 +225,14 @@ public class PersonDao extends DAO<Person> {
                     + "is_teacher = ? "
                     + "WHERE person_id = ?";
             
+            // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
             
+            //I use an index so i can add or delete a parameter more freely.
             int i = 1;
+            
+            /* Each input is checked so if it contains an empty string , 
+             * it's value will be put as null in the db instead. */
             String firstName = e.getFirstName().equals("") ? null : e.getFirstName();
             st.setString(i++, firstName);
             String lastName = e.getLastName().equals("") ? null : e.getLastName();
@@ -234,25 +260,34 @@ public class PersonDao extends DAO<Person> {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    // Delete a a specific person from entityList and the db.
     @Override
     public void delete(Person e) {
-        setDeleteCommand("DELETE FROM person WHERE person_id = ");
+        setDeleteCommand("DELETE FROM person WHERE person_id = ?;");
         super.delete(e);
     }
     
+    // Delete a specific person from entityList and the db using an id directly.
     @Override
     public void delete(Integer id) {
-        setDeleteCommand("DELETE FROM person WHERE person_id = ");
+        setDeleteCommand("DELETE FROM person WHERE person_id = ?;");
         super.delete(id);
     }
     
+    /* This function will build a list of Persons 
+     * (protected variable from the parent class entityList) using the raw data 
+     * coming from the db. */   
     private void buildPersonListFromDB(ResultSet rs) {
         
+        // Reset the list.
         entityList.clear();
+        
         try {
+            // Each row is processed into a Person entity
+            String date;
             while (rs.next()){
-                String date;
+                // Parsing SQL Date object in a string.
                 try {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     date = df.format(rs.getDate("date_of_birth"));
@@ -262,12 +297,14 @@ public class PersonDao extends DAO<Person> {
                     date = "";
                 }
                 
+                // Create a Person using the row  info.
                 Person person = new Person(rs.getInt("person_id"),
                         rs.getString("first_name"), rs.getString("last_name"),
                         rs.getString("country"), rs.getString("city"),
                         rs.getString("postal_code"), rs.getString("address"),
                         date, rs.getString("email"), rs.getBoolean("is_teacher"));
                 
+                // Adding that Person into the entityList.
                 entityList.add(person);
             }
             

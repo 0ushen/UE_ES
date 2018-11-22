@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui;
 
 import dao.PersonDao;
@@ -12,10 +7,13 @@ import javax.servlet.http.*;
 import com.google.gson.Gson;
 import entity.Person;
 import java.util.ArrayList;
+import ui.viewmodel.PersonSearchVM;
+
 /**
  *
  * @author Samir
  */
+
 public class PersonServlet extends HttpServlet {
    
     // Global variable personDao so only one will be used per session.
@@ -77,7 +75,7 @@ public class PersonServlet extends HttpServlet {
                  * some criteria the client sent. */ 
                 case "getSearch" :
                     // Create a person Entity via the json constructor.
-                    Person personToSearch = new Person(json);
+                    PersonSearchVM personToSearch = new PersonSearchVM(json);
                     
                     // Load all the people matching those criteria into a List.
                     list = pDao.load(personToSearch);

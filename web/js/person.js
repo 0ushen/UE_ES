@@ -15,6 +15,8 @@ $(document).ready(function () {
         isTeacher: ''
     };
     
+    var lastEvent = '';
+    
     // Event handlers for the 3 buttons in the search box form.
     $('#btnAdd').click(doSave);
     $('#btnSearch').click(getSearch);

@@ -1,19 +1,21 @@
-package entity;
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ui.viewmodel;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.time.LocalDate;
 import java.sql.Date;
+import java.time.LocalDate;
 
- /*
- * @author Samir
+/**
+ *
+ * @author Laurence
  */
-
-public class Person implements Entity {
-    
-    private Integer id;
+public class PersonSearchVM {
     private String firstName;
     private String lastName;
     private String country;
@@ -23,17 +25,15 @@ public class Person implements Entity {
     private String dateOfBirth;
     private String email;
     private boolean isTeacher;
+
+    public PersonSearchVM() {
+    }
     
-    public Person() {}
-    
-    /* Constructor. If any of these values except id is null, i will set it to
-     * an empty string so it is more manageable when converting it into json
-     * and processing it on the client side. */
-    public Person(Integer id, String firstName, String lastName, String country, 
+    // Basic constructor.
+    public PersonSearchVM(String firstName, String lastName, String country, 
             String city, String postalCode, String address, String dateOfBirth, 
             String email, boolean isTeacher) {
         
-        this.id = id;
         this.firstName = firstName == null ? "" : firstName;
         this.lastName = lastName == null ? "" : lastName;
         this.country = country == null ? "" : country;
@@ -43,19 +43,17 @@ public class Person implements Entity {
         this.dateOfBirth = dateOfBirth == null ? "" : dateOfBirth;
         this.email = email == null ? "" : email;
         this.isTeacher = isTeacher;
-        
     }
     
     /* Constructor with json. Speed up the process of receiving the json string
-     * from the client and turning it into a Person entity. */
-    public Person(String json){
+     * from the client and turning it into a Person viewmodel. */
+    public PersonSearchVM(String json){
         
         JsonParser parser = new JsonParser();
         JsonElement jsonTree = parser.parse(json);
         if(jsonTree.isJsonObject()) {
             JsonObject person = jsonTree.getAsJsonObject();
             
-            this.id = person.has("id") ? person.get("id").getAsInt() : null; 
             this.firstName = person.get("firstName").getAsString();
             this.lastName = person.get("lastName").getAsString();
             this.country = person.get("country").getAsString();
@@ -67,13 +65,7 @@ public class Person implements Entity {
             this.isTeacher = person.get("isTeacher").getAsString().equals("true");
         }
     }
-            
-    
-    @Override
-    public Integer getId() {
-        return id;
-    }
-    
+
     public String getFirstName() {
         return firstName;
     }
@@ -102,27 +94,21 @@ public class Person implements Entity {
         return dateOfBirth;
     }
     
-    // Transforms a date string (format yyyy-MM-dd) into a LocalDate object.
     public LocalDate getDateOfBirthObject() {
         return LocalDate.parse(dateOfBirth);
     }
     
-    // Transforms a LocalDateobject into an SQL Date Object.
     public java.sql.Date getDateOfBirthSQL() {
         java.sql.Date dateSQL = Date.valueOf(getDateOfBirthObject());
         return dateSQL;
     }
-
+    
     public String getEmail() {
         return email;
     }
 
     public boolean isTeacher() {
         return isTeacher;
-    }
-    
-    public void setId (Integer id) {
-        this.id = id;
     }
     
     public void setFirstName(String firstName) {
@@ -160,8 +146,5 @@ public class Person implements Entity {
     public void setIsTeacher(boolean isTeacher) {
         this.isTeacher = isTeacher;
     }
-    
-    
-    
     
 }
