@@ -40,53 +40,56 @@ public class PersonDao extends DAO<Person> {
 
     @Override
     public ArrayList<Person> load(Person e) {
+        PreparedStatement st;
         
         try {
-            String query = "SELECT person_id, first_name, last_name, country, city, postal_code,"
-                  + " address, date_of_birth, email, is_teacher FROM person WHERE ";
-            int i = 0;
-            if(e.getId() != null){
+            String query = "SELECT "
+                    + "person_id, "
+                    + "first_name, "
+                    + "last_name, "
+                    + "country, city, "
+                    + "postal_code, "
+                    + "address, "
+                    + "date_of_birth, "
+                    + "email, "
+                    + "is_teacher "
+                    + "FROM person "
+                    + "WHERE ";
+            
+            if(e.getId() != null)
                 query += "person_id = ? AND ";
-                i++;
-            }
-            if(!e.getFirstName().equals("")){
+                
+            if(!e.getFirstName().equals(""))
                 query += "first_name = ? AND ";
-                i++;
-            }
-            if(!e.getLastName().equals("")){
+                
+            if(!e.getLastName().equals(""))
                 query += "last_name = ? AND ";
-                i++;
-            }
-            if(!e.getCountry().equals("")){
+                
+            if(!e.getCountry().equals(""))
                 query += "country = ? AND ";
-                i++;
-            }
-            if(!e.getCity().equals("")){
+                
+            if(!e.getCity().equals(""))
                 query += "city = ? AND ";
-                i++;
-            }
-            if(!e.getPostalCode().equals("")){
+                
+            if(!e.getPostalCode().equals(""))
                 query += "postal_code = ? AND ";
-                i++;
-            }
-            if(!e.getAddress().equals("")){
+                
+            if(!e.getAddress().equals(""))
                 query += "address = ? AND ";
-                i++;
-            }      
-            if(!e.getDateOfBirth().equals("")){
+                  
+            if(!e.getDateOfBirth().equals(""))
                 query += "date_of_birth = ? AND ";
-                i++;
-            }
-            if(!e.getEmail().equals("")){
+                
+            if(!e.getEmail().equals(""))
                 query += "email = ? AND ";
-                i++;
-            }
+                
             query += "is_teacher = ?;";
             
             System.out.println("Query in load(E) : " + query);
             
-            PreparedStatement st = conn.prepareStatement(query);
-            i = 1;
+            st = conn.prepareStatement(query);
+            
+            int i = 1;
             if(e.getId() != null){
                 st.setInt(i, e.getId());
                 i++;
@@ -124,10 +127,12 @@ public class PersonDao extends DAO<Person> {
                 i++;
             }
             st.setBoolean(i, e.isTeacher());
+            
             ResultSet rs = st.executeQuery();
             buildPersonListFromDB(rs);
-            st.close();
             
+            st.close();
+              
         } catch (SQLException ex) {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,72 +144,41 @@ public class PersonDao extends DAO<Person> {
     public void save(Person e) {
         
         try {
-            String query = "INSERT INTO person (first_name, last_name, ";
-            int i = 0;
-            if(!e.getCountry().equals("")){
-                query += "country, ";
-                i++;
-            }
-            if(!e.getCity().equals("")){
-                query += "city, ";
-                i++;
-            }
-            if(!e.getPostalCode().equals("")){
-                query += "postal_code, ";
-                i++;
-            }
-            if(!e.getAddress().equals("")){
-                query += "address, ";
-                i++;
-            }      
-            if(!e.getDateOfBirth().equals("")){
-                query += "date_of_birth, ";
-                i++;
-            }
-            if(!e.getEmail().equals("")){
-                query += "email, ";
-                i++;
-            }
-            query += "is_teacher) VALUES (?, ?, ";
-            for(int j = 0 ; j <= i ; j++){
-                if(j == i)
-                    query += "?)";
-                else
-                    query += "?, ";
-            }
-            
-            System.out.println("Query in save(e) : " + query);
+            String query = "INSERT INTO person ("
+                    + "first_name, "
+                    + "last_name, "
+                    + "country, "
+                    + "city, "
+                    + "postal_code, "
+                    + "address, "
+                    + "date_of_birth, "
+                    + "email, "
+                    + "is_teacher)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
             
             PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, e.getFirstName());
-            st.setString(2, e.getLastName());
-            i = 3;
-            if(!e.getCountry().equals("")){
-                st.setString(i, e.getCountry());
-                i++;
-            }
-            if(!e.getCity().equals("")){
-                st.setString(i, e.getCity());
-                i++;
-            }
-            if(!e.getPostalCode().equals("")){
-                st.setString(i, e.getPostalCode());
-                i++;
-            }
-            if(!e.getAddress().equals("")){
-                st.setString(i, e.getAddress());
-                i++;
-            }      
-            if(!e.getDateOfBirth().equals("")){
-                st.setDate(i, e.getDateOfBirthSQL());
-                i++;
-            }
-            if(!e.getEmail().equals("")){
-                st.setString(i, e.getEmail());
-                i++;
-            }
-            st.setBoolean(i, e.isTeacher());
+            
+            int i = 1;
+            String firstName = e.getFirstName().equals("") ? null : e.getFirstName();
+            st.setString(i++, firstName);
+            String lastName = e.getLastName().equals("") ? null : e.getLastName();
+            st.setString(i++, lastName);
+            String country = e.getCountry().equals("") ? null : e.getCountry();
+            st.setString(i++, country);
+            String city = e.getCity().equals("") ? null : e.getCity();
+            st.setString(i++, city);
+            String postalCode = e.getPostalCode().equals("") ? null : e.getPostalCode();
+            st.setString(i++, postalCode);
+            String address = e.getAddress().equals("") ? null : e.getAddress();
+            st.setString(i++, address);
+            Date dateOfBirthSQL = e.getDateOfBirth().equals("") ? null : e.getDateOfBirthSQL();
+            st.setDate(i++, dateOfBirthSQL);
+            String email = e.getEmail().equals("") ? null : e.getEmail();
+            st.setString(i++, email);
+            st.setBoolean(i++, e.isTeacher());
+            
             st.executeUpdate();
+            
             st.close();
             
         } catch (SQLException ex) {
@@ -216,28 +190,44 @@ public class PersonDao extends DAO<Person> {
     public void update(Person e) {
         
         try {
-            PreparedStatement st = conn.prepareStatement(""
+            String query =""
                     + "UPDATE person "
-                    + "SET first_name = ?, last_name = ?, country = ?, "
-                    + "city = ?, postal_code = ?, address = ?, "
-                    + "date_of_birth = ?, email = ?, is_teacher = ? "
-                    + "WHERE person_id = ?");
-            st.setString(1, e.getFirstName());
-            st.setString(2, e.getLastName());
-            st.setString(3, e.getCountry());
-            st.setString(4, e.getCity());
-            st.setString(5, e.getPostalCode());
-            st.setString(6, e.getAddress());
+                    + "SET "
+                    + "first_name = ?, "
+                    + "last_name = ?, "
+                    + "country = ?, "
+                    + "city = ?, "
+                    + "postal_code = ?, "
+                    + "address = ?, "
+                    + "date_of_birth = ?, "
+                    + "email = ?, "
+                    + "is_teacher = ? "
+                    + "WHERE person_id = ?";
             
-            if(e.getDateOfBirth().equals(""))
-                st.setDate(7, null);
-            else
-                st.setDate(7, e.getDateOfBirthSQL());
+            PreparedStatement st = conn.prepareStatement(query);
             
-            st.setString(8, e.getEmail());
-            st.setBoolean(9, e.isTeacher());
-            st.setInt(10, e.getId());
+            int i = 1;
+            String firstName = e.getFirstName().equals("") ? null : e.getFirstName();
+            st.setString(i++, firstName);
+            String lastName = e.getLastName().equals("") ? null : e.getLastName();
+            st.setString(i++, lastName);
+            String country = e.getCountry().equals("") ? null : e.getCountry();
+            st.setString(i++, country);
+            String city = e.getCity().equals("") ? null : e.getCity();
+            st.setString(i++, city);
+            String postalCode = e.getPostalCode().equals("") ? null : e.getPostalCode();
+            st.setString(i++, postalCode);
+            String address = e.getAddress().equals("") ? null : e.getAddress();
+            st.setString(i++, address);
+            Date dateOfBirthSQL = e.getDateOfBirth().equals("") ? null : e.getDateOfBirthSQL();
+            st.setDate(i++, dateOfBirthSQL);
+            String email = e.getEmail().equals("") ? null : e.getEmail();
+            st.setString(i++, email);
+            st.setBoolean(i++, e.isTeacher());
+            st.setInt(i++, e.getId());
+            
             st.executeUpdate();
+            
             st.close();
             
         } catch (SQLException ex) {

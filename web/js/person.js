@@ -142,6 +142,8 @@ $(document).ready(function () {
      * info. */
     function buildTable(response) {
         
+        $('tbody').html('');
+        
         /* For each person in the server response an html row will be created
          * and put into the htmlContent variable .*/
         var htmlContent, yesOrNo;
