@@ -14,7 +14,7 @@ $(document).ready(function () {
         address: '',
         isTeacher: ''
     };
-    
+    // Global variable used to know which event was called last.
     var lastEvent = '';
     
     // Event handlers for the 3 buttons in the search box form.
@@ -39,7 +39,8 @@ $(document).ready(function () {
             success: function() {
                 console.log(person.firstName + " " + person.lastName +
                         " was succesfully added to the DB");
-                getAll(); // refresh page
+                
+                refresh();
             },
             error: showAjaxError
         });
@@ -65,7 +66,7 @@ $(document).ready(function () {
             success: function() {
                 console.log(person["firstName"] + " " + person["lastName"] +
                         " was succesfully changed in the DB");
-                getAll(); // refresh data in the table.
+                refresh();
             },
             error: showAjaxError
         });
@@ -87,7 +88,7 @@ $(document).ready(function () {
                  * in the table */
                 $('#details-box').html('');
                 $('#results-box').toggleClass('col-lg-12 col-lg-6');
-                getAll();
+                refresh();
             },
             error: showAjaxError
         });
@@ -108,6 +109,8 @@ $(document).ready(function () {
             dataType: "json"
         });
         
+        lastEvent = "getSearch";
+        
     }
     
     // Ask the server to return a list of all the person in the database.
@@ -121,6 +124,16 @@ $(document).ready(function () {
             dataType: "json"
         });
         
+        lastEvent = "getAll";
+        
+    }
+    
+    // Refresh the table. Will be used after a change in the db.
+    function refresh() {
+        if (lastEvent === 'getAll')
+            getAll();
+        else if (lastEvent === 'getSearch')
+            getSearch();
     }
     
     /* This function will build a person object based on all the info 
