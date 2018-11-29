@@ -8,6 +8,14 @@
         <servlet-name>PersonServlet</servlet-name>
         <url-pattern>/PersonServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SectionServlet</servlet-name>
+        <servlet-class>ui.SectionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SectionServlet</servlet-name>
+        <url-pattern>/SectionServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

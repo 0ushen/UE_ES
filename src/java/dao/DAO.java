@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import ui.viewmodel.PersonSearchVM;
 
 /**
  *
@@ -95,10 +94,6 @@ public abstract class DAO<T extends Entity> {
     
     // Will be used to load all the database info into the entitylist.
     public abstract ArrayList<T> load();
-    
-    /* Will be used to load all the database info matching the viewmodel
-     * criterias into the entitylist. */
-    public abstract ArrayList<T> load(PersonSearchVM vm);
     
     // Will be used to save an entity into the database.
     public abstract void save(T e);

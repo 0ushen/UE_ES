@@ -41,7 +41,6 @@ public class PersonDao extends DAO<Person> {
     
     /* Load each person from the person table that match the info coming from 
      * the viewmodel.*/
-    @Override
     public ArrayList<Person> load(PersonSearchVM vm) {
         
         try {
@@ -148,6 +147,34 @@ public class PersonDao extends DAO<Person> {
         
         // entityList now contains all the data we asked for as Person objects.
         return entityList;
+    }
+    
+    public Person load(Integer id) {
+        
+        System.out.println(id);
+        try {
+            // Execute an SQL query on the db and catch his result.
+            String query =
+                    "SELECT person_id, first_name, last_name, country, city, "
+                  + "postal_code, address, date_of_birth, email, is_teacher "
+                  + "FROM person "
+                  + "WHERE person_id = ?;";
+            
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            
+            /* Execute the query and it's raw results are processed into one
+             * Person entity. That person is put into the entityList. */
+            buildPersonListFromDB(rs);
+            
+        } catch (SQLException | NullPointerException ex) {
+            Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /* entityList now contains the person we searched for, so we return 
+         * the first item in the list. */
+        return entityList.get(0);
     }
     
     // Save this Person in the database.
