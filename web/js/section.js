@@ -7,7 +7,8 @@ $(document).ready(function () {
         id: '',
         sectionName: '',
         description: '',
-        teacherLastName: ''
+        teacherLastName: '',
+        teacherId: ''
     };
     // Global variable used to know which event was called last.
     var lastEvent = '';
@@ -37,7 +38,7 @@ $(document).ready(function () {
     }
     
     // Ask the server to do an update on a section via its id.
-    function doUpdate(id) {
+    function doUpdate(id, teacherId) {
         // Create a section object from the input data.
         var inputs = $('#updateForm')
                 .find(':input:not([type=submit]):not([type=checkbox])');
@@ -45,6 +46,7 @@ $(document).ready(function () {
             section[$(this).attr('id').replace('-d', '')] = $(this).val();
         });
         section["id"] = id;
+        section["teacherId"] = teacherId;
 
         // Section object is sent to the server as json.
         var json = JSON.stringify(section);
@@ -154,6 +156,7 @@ $(document).ready(function () {
                 '<td class="sectionName">' + this.sectionName + '</td>' +
                 '<td class="description">' + this.description + '</td>' +
                 '<td class="teacherLastName">' + this.teacherLastName + '</td>' + 
+                '<td class="teacherId hide">' + this.teacherId + '</td>' +
                 '</tr>';     
         });
         
@@ -198,17 +201,18 @@ $(document).ready(function () {
                 console.log(clickedRow.find('.teacherLastName').html());
                 $('#sectionName-d').val(clickedRow.find('.sectionName').html());
                 $('#description-d').val(clickedRow.find('.description').html());
-                $('#teacherLastName-d').val('sale chiendard');
+                $('#teacherLastName-d').val(clickedRow.find('.teacherLastName').html());
                 
                 
                 var id = clickedRow.find('.id').html();
+                var teacherId = clickedRow.find('.teacherId').html();
                 
                 /* This update event send data in the details form to the 
                  * server.
                  * The server will then update this section details based on
                  * what the user typed in the form. */
 
-                $('#btnUpdate').click(function() {doUpdate(id);});
+                $('#btnUpdate').click(function() {doUpdate(id, teacherId);});
 
                 /* This event will ask the server to delete the person in 
                  * the detail box from the database. */
@@ -228,5 +232,35 @@ $(document).ready(function () {
     // Show a message in the console if the ajax request returns an error.
     function showAjaxError(error) {
         console.log("AJAX error in request : " + JSON.stringify(error, null, 2));
+    }
+    
+    
+    $('#teacherNameDropdownButton').click(function() {
+        
+        $.ajax({
+            url: "PersonServlet", 
+            data: {Action: "getAll"},
+            success: buildDropdown,
+            error: showAjaxError,
+            dataType: "json"
+        });
+    });
+    
+    function buildDropdown(response) {
+        
+        var dropdown = $('#teacherNameDropdown');
+        dropdown.html('');
+        var htmlContent = '';
+        $.each(response, function(){
+            htmlContent += '<a class="dropdown-item" href="#" data-teacherid="' + this.teacherId + '">' + this.lastName + '</a>';
+        });
+        dropdown.html(htmlContent);
+        
+        $('.dropdown-item').click(function() {
+            $('#teacherLastName').val($(this).html());
+            console.log($(this).data('teacherid'));
+            section["teacherId"] = $(this).data('teacherid');
+            //console.log(section["teacherId"]);
+        });
     }
 });

@@ -22,8 +22,7 @@ public class PersonDao extends DAO<Person> {
         
         try {
             // Execute an SQL query on the db and catch his result.
-            ResultSet rs = conn.createStatement().executeQuery(
-                    "SELECT person_id, first_name, last_name, country, city, "
+            ResultSet rs = conn.createStatement().executeQuery("SELECT person_id, first_name, last_name, country, city, "
                   + "postal_code, address, date_of_birth, email, is_teacher "
                   + "FROM person");
             

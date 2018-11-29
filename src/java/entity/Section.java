@@ -1,7 +1,5 @@
 package entity;
 
-import dao.PersonDao;
-import ui.viewmodel.SectionVM;
 
  /*
  * @author Samir
@@ -13,7 +11,6 @@ public class Section implements Entity {
     private String sectionName;
     private String description;
     private Person teacher;
-    private static PersonDao pDao = new PersonDao();
     
     public Section() {}
    
@@ -29,13 +26,6 @@ public class Section implements Entity {
         this.teacher = teacher;
         
     }
-     
-    public Section (SectionVM sectionVM){
-        this.id = sectionVM.getId();
-        this.sectionName = sectionVM.getSectionName();
-        this.description = sectionVM.getDescription();
-        this.teacher = pDao.load(sectionVM.getId());
-    } 
     
     @Override
     public Integer getId() {

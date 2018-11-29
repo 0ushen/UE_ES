@@ -15,7 +15,7 @@ import ui.viewmodel.SectionVM;
 
 public class SectionDao extends DAO<Section> {
     
-    private static PersonDao pDao = new PersonDao();
+    private static final PersonDao pDao = new PersonDao();
     
     /* Load each section from the section table into an ArrayList, this entityList
      * is a protected variable in the parent class DAO. */
@@ -50,8 +50,10 @@ public class SectionDao extends DAO<Section> {
                     + "section_id, "
                     + "name, "
                     + "description, "
-                    + "person_id"
+                    + "last_name, "
+                    + "section.person_id AS person_id "
                     + "FROM section "
+                    + "INNER JOIN person ON section.person_id = person.person_id "
                     + "WHERE ";
             
             if(!vm.getSectionName().equals(""))

@@ -35,7 +35,14 @@
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
                     <label for="teacherLastName">Teacher name</label>
-                    <input class="form-control" id="teacherLastName" type="text"/>
+                    <div class="input-append btn-group">
+                        <input class="form-control" id="teacherLastName" type="text">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="teacherNameDropdownButton" data-toggle="dropdown">
+                        </button>
+                        <div class="dropdown-menu" id="teacherNameDropdown">
+                            <!-- LOAD FROM DB !-->
+                        </div>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
                     <button type="submit" class="btn btn-primary btn-block" id="btnAdd">Add</button>
@@ -74,8 +81,10 @@
 
             </div>
         </div>
-
+        
+        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script src="./js/section.js"></script>
     </body>

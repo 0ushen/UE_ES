@@ -1,6 +1,8 @@
 package ui;
 
+import dao.PersonDao;
 import dao.SectionDao;
+import entity.Person;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -17,6 +19,7 @@ public class SectionServlet extends HttpServlet {
    
     // Global variable SectionDao so only one will be used per session.
     private SectionDao sDao;
+    private PersonDao pDao;
     
     /* GET and POST requests are handled the same way and redirected to this 
      * method. */
@@ -33,6 +36,13 @@ public class SectionServlet extends HttpServlet {
             sDao = (SectionDao) session.getAttribute("sDao");
         }
         
+        if (session.getAttribute("pDao") == null) {
+            pDao = new PersonDao();
+            session.setAttribute("pDao", pDao);
+        } else {
+            pDao = (PersonDao) session.getAttribute("pDao");
+        }
+        
         // Action parameter will tell the server what to do.
         String action = request.getParameter("Action");
         
@@ -45,6 +55,7 @@ public class SectionServlet extends HttpServlet {
         ArrayList<Section> list;
         String jsonList;
         SectionVM sectionVM;
+        Person teacher;
         
         // If action parameter is present a switch will handle what to do.
         if(action != null){
@@ -67,11 +78,16 @@ public class SectionServlet extends HttpServlet {
                 /* Insert a new section into the database based on the data sent
                  * by the client. */
                 case "doSave" :
-                    // Create a section view model via the json constructor.
+                   // Create a section view model via the json constructor.
                     sectionVM = new SectionVM(json);
                     
+                    teacher = pDao.load(sectionVM.getId());
+                    
                     // Create a person entity from the view model.
-                    Section sectionToAdd = new Section(sectionVM);
+                    Section sectionToAdd = new Section(null,
+                            sectionVM.getSectionName(), 
+                            sectionVM.getDescription(), 
+                            teacher);
                     
                     // Insert this section Entity into the db.
                     sDao.save(sectionToAdd);
@@ -106,8 +122,12 @@ public class SectionServlet extends HttpServlet {
                     // Create a section viewmodel via the json constructor.
                     sectionVM = new SectionVM(json);
                     
+                    teacher = pDao.load(sectionVM.getTeacherId());
+                    
                     // Convert the view model into a java entity.
-                    Section sectionToUpdate = new Section(sectionVM);
+                    Section sectionToUpdate = new Section(sectionVM.getId(), 
+                            sectionVM.getSectionName(), sectionVM.getDescription(),
+                            teacher);
                     
                     // Performs the update.
                     sDao.update(sectionToUpdate);
