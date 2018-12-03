@@ -86,7 +86,7 @@ public class PersonDao extends DAO<Person> {
              * mentionned. (not ideal) */
             query += "is_teacher = ?;";
             
-            System.out.println("Query in load(E) : " + query);
+            System.out.println("Query in Person load(vm) : " + query);
             
             // Using the query to build a Prepared Statement.
             PreparedStatement st = conn.prepareStatement(query);
@@ -132,6 +132,8 @@ public class PersonDao extends DAO<Person> {
             //As i mentionned isTeacher is a mandatory search parameter.
             st.setBoolean(i, vm.isTeacher());
             
+            System.out.println("Prepared statement in Person load(vm) : " + st);
+            
             /* Execute the query and it's raw results are processed into one or
              * more Person entities. Eeach one of them is put into the 
              * entityList. */
@@ -150,7 +152,6 @@ public class PersonDao extends DAO<Person> {
     
     public Person load(Integer id) {
         
-        System.out.println(id);
         try {
             // Execute an SQL query on the db and catch his result.
             String query =
@@ -159,8 +160,13 @@ public class PersonDao extends DAO<Person> {
                   + "FROM person "
                   + "WHERE person_id = ?;";
             
+            System.out.println("Query in Person load(id) : " + query);
+            
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, id);
+            
+            System.out.println("Prepared statement in Person load(id) : " + st);
+            
             ResultSet rs = st.executeQuery();
             
             /* Execute the query and it's raw results are processed into one
@@ -194,6 +200,8 @@ public class PersonDao extends DAO<Person> {
                     + "is_teacher)"
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
             
+            System.out.println("Query in Person save(E) : " + query);
+            
             // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
             
@@ -220,6 +228,8 @@ public class PersonDao extends DAO<Person> {
             st.setString(i++, email);
             // As always isTeacher parameter is mandatory :(.
             st.setBoolean(i++, e.isTeacher());
+            
+            System.out.println("Prepared statement in Person save(E) : " + st);
             
             // Prepared statement is executed.
             st.executeUpdate();
@@ -251,6 +261,8 @@ public class PersonDao extends DAO<Person> {
                     + "is_teacher = ? "
                     + "WHERE person_id = ?";
             
+            System.out.println("Query in Person update(vm) : " + query);
+            
             // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
             
@@ -277,6 +289,8 @@ public class PersonDao extends DAO<Person> {
             st.setString(i++, email);
             st.setBoolean(i++, e.isTeacher());
             st.setInt(i++, e.getId());
+            
+            System.out.println("Prepared statement in Person update(E) : " + st);
             
             st.executeUpdate();
             
@@ -334,14 +348,14 @@ public class PersonDao extends DAO<Person> {
                 entityList.add(person);
             }
             
-            System.out.println("****PERSONS IN ENTITYLIST****\n");
+            /*System.out.println("****PERSONS IN ENTITYLIST****\n");
             entityList.forEach((person) -> {
                 System.out.println("first name : " + person.getFirstName() +
                         " | last name : " + person.getLastName() + 
                         " | email : " + person.getEmail() + 
                         " | date of birth : " + person.getDateOfBirth() + 
                         " | teacher : " + person.isTeacher());
-            });
+            });*/
         } catch (SQLException ex) {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }

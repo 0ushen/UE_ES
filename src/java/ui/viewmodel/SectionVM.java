@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import entity.Person;
 import entity.Section;
 import java.util.ArrayList;
 
@@ -23,18 +22,9 @@ public class SectionVM {
     
     public SectionVM() {}
     
-    public SectionVM(Section section) {
-        
-        this.id = section.getId();
-        this.sectionName = section.getSectionName();
-        this.description = section.getDescription();
-        this.teacherLastName = section.getTeacher().getLastName();
-        this.teacherId = section.getTeacher().getId();
-    }
-    
-    /* Constructor. If any of these values except id is null, i will set it to
-     * an empty string so it is more manageable when converting it into json
-     * and processing it on the client side. */
+    /* Constructor. If any of these values except id or teacherId is null, 
+     * i will set it to an empty string so it is more manageable when converting
+     * it into json  and processing it on the client side. */
     public SectionVM(Integer id, String sectionName, String description,
             String teacherLastName, Integer teacherId) {
         
@@ -44,6 +34,18 @@ public class SectionVM {
         this.teacherLastName = teacherLastName == null ? "" : teacherLastName;
         this.teacherId = teacherId;
         
+    }
+    
+    /* Constructor via a Section entity. Only things pertinent to the client
+     * view model will be sent. This will reduce the amount of data sent between
+     * server and client.*/
+    public SectionVM(Section section) {
+        
+        this.id = section.getId();
+        this.sectionName = section.getSectionName();
+        this.description = section.getDescription();
+        this.teacherLastName = section.getTeacher().getLastName();
+        this.teacherId = section.getTeacher().getId();
     }
     
     /* Constructor with json. Speed up the process of receiving the json string
@@ -63,6 +65,8 @@ public class SectionVM {
         }
     }
     
+    /* This will turn an array of Section entities into a list of section view 
+     * models and will return it in a json format. */
     public static String ListOfSectionsToVMJson (ArrayList<Section> list) {
         
         ArrayList<SectionVM> listOfVM = new ArrayList<>();

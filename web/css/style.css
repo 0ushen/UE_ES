@@ -13,6 +13,10 @@
     white-space: nowrap;
 }
 
+#results-box .description {
+    white-space: normal;
+}
+
 #member
 {
     overflow: auto;
@@ -22,3 +26,10 @@
 .input-append .btn.dropdown-toggle {
     float: none;
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+

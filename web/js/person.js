@@ -27,9 +27,21 @@ $(document).ready(function () {
         
         // first name and last name are mandatories inputs.
         var fn = $('#firstName');
-        fn.val() ? fn.removeClass('is-invalid') : fn.addClass('is-invalid') ;
         var ln = $('#lastName');
-        ln.val() ? ln.removeClass('is-invalid') : ln.addClass('is-invalid') ;
+        if(fn.val()) { 
+            fn.removeClass('is-invalid');
+        }
+        else {
+            fn.addClass('is-invalid');
+            return;
+        }
+        if(ln.val()) {
+            ln.removeClass('is-invalid');
+        }
+        else {
+            ln.addClass('is-invalid');
+            return;
+        }
         
         var json = getJsonFromInput();
         

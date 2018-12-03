@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * 
  * 
  * TODO : 
- * - button update and delete placement in the detail box for medium sizes.
+ * - 
  */
 
 

@@ -39,7 +39,7 @@ public class PersonServlet extends HttpServlet {
         
         // Data received from the client.
         String json = request.getParameter("JSON");
-        System.out.println(json);
+        //System.out.println(json);
         
         /* list will contain data the database returned and will be sent to 
          * the client as a json string. */

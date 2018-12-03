@@ -15,7 +15,7 @@ import ui.viewmodel.SectionVM;
 
 public class SectionDao extends DAO<Section> {
     
-    private static final PersonDao pDao = new PersonDao();
+    private static final PersonDao PDAO = new PersonDao();
     
     /* Load each section from the section table into an ArrayList, this entityList
      * is a protected variable in the parent class DAO. */
@@ -57,18 +57,18 @@ public class SectionDao extends DAO<Section> {
                     + "WHERE ";
             
             if(!vm.getSectionName().equals(""))
-                query += "name = ? AND ";
+                query += "LOWER(name) LIKE LOWER(?) AND ";
                 
             if(!vm.getDescription().equals(""))
-                query += "description = ? AND ";
+                query += "LOWER(description) LIKE LOWER(?) AND ";
                 
             if(!vm.getTeacherLastName().equals(""))
-                query += "last_name = ? AND ";
+                query += "LOWER(last_name) LIKE LOWER(?) AND ";
             
             // Make sure the query does not end with AND.
             query = query.substring(0, query.length() - 5) + ";";
             
-            System.out.println("Query in load(E) : " + query);
+            System.out.println("Query in Section load(vm) : " + query);
             
             // Using the query to build a Prepared Statement.
             PreparedStatement st = conn.prepareStatement(query);
@@ -79,17 +79,19 @@ public class SectionDao extends DAO<Section> {
             /* Each field is checked and if it's not empty, it's value is set as
                a parameter in the request. */
             if(!vm.getSectionName().equals("")){
-                st.setString(i, vm.getSectionName());
+                st.setString(i, '%' + vm.getSectionName() + '%');
                 i++;
             }
             if(!vm.getDescription().equals("")){
-                st.setString(i, vm.getDescription());
+                st.setString(i, '%' + vm.getDescription() + '%');
                 i++;
             }
             if(!vm.getTeacherLastName().equals("")){
-                st.setString(i, vm.getTeacherLastName());
+                st.setString(i, '%' + vm.getTeacherLastName() + '%');
                 i++;
             }
+            
+            System.out.println("Prepared Statement in Section load(vm) : " + st);
             
             /* Execute the query and it's raw results are processed into one or
              * more Section entities. Eeach one of them is put into the 
@@ -119,6 +121,8 @@ public class SectionDao extends DAO<Section> {
                     + "person_id)"
                     + "VALUES (?, ?, ?);";
             
+            System.out.println("Query in Section save(e) : " + query);
+            
             // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
             
@@ -134,7 +138,8 @@ public class SectionDao extends DAO<Section> {
             Integer teacherId = e.getTeacher().getId();
             st.setInt(i++, teacherId);
             
-            // Prepared statement is executed.
+            System.out.println("Prepared Statement in Section save(e) : " + st);
+            
             st.executeUpdate();
             
             st.close();
@@ -156,7 +161,9 @@ public class SectionDao extends DAO<Section> {
                     + "name = ?, "
                     + "description = ?, "
                     + "person_id = ? "
-                    + "WHERE section_id = ?";
+                    + "WHERE section_id = ?;";
+            
+            System.out.println("Query in  Section update(e) : " + query);
             
             // Query is used to initialise a prepared statement.
             PreparedStatement st = conn.prepareStatement(query);
@@ -172,6 +179,9 @@ public class SectionDao extends DAO<Section> {
             st.setString(i++, description);
             Integer teacherId = e.getTeacher().getId();
             st.setInt(i++, teacherId);
+            st.setInt(i++, e.getId());
+            
+            System.out.println("Prepared Statement in Section update(e) : " + st);
             
             st.executeUpdate();
             
@@ -197,8 +207,8 @@ public class SectionDao extends DAO<Section> {
     }
     
     /* This function will build a list of Sections 
-     * (protected variable from the parent class entityList) using the raw data 
-     * coming from the db. */   
+     * (protected variable entityList from the parent class DAO) using the raw 
+     * data coming from the db. */   
     private void buildSectionListFromDB(ResultSet rs) {
         
         // Reset the list.
@@ -208,7 +218,7 @@ public class SectionDao extends DAO<Section> {
             // Each row is processed into a Section entity
             while (rs.next()){
                 // Create a Person entity with this teacher id.
-                Person teacher = pDao.load(rs.getInt("person_id"));
+                Person teacher = PDAO.load(rs.getInt("person_id"));
                 
                 // Create a Section using the row info.
                 Section section = new Section(
@@ -221,12 +231,12 @@ public class SectionDao extends DAO<Section> {
                 entityList.add(section);
             }
             
-            System.out.println("****SECTIONS IN ENTITYLIST****\n");
+            /*System.out.println("****SECTIONS IN ENTITYLIST****\n");
             entityList.forEach((section) -> {
                 System.out.println("section name : " + section.getSectionName() +
                         " | description : " + section.getDescription() + 
                         " | teacher : " + section.getTeacher().getLastName());
-            });
+            });*/
         } catch (SQLException ex) {
             Logger.getLogger(SectionDao.class.getName()).log(Level.SEVERE, null, ex);
         }

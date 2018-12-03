@@ -35,12 +35,13 @@
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
                     <label for="teacherLastName">Teacher name</label>
-                    <div class="input-append btn-group">
-                        <input class="form-control" id="teacherLastName" type="text">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="teacherNameDropdownButton" data-toggle="dropdown">
-                        </button>
-                        <div class="dropdown-menu" id="teacherNameDropdown">
+                    <div class="input-group">
+                        <input class="form-control teacherLastName" id="teacherLastName" type="text"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary dropdown-toggle teacherNameDropdownButton" type="button" id="teacherNameDropdownButton" data-toggle="dropdown"></button>
+                            <div class="dropdown-menu scrollable-menu teacherNameDropdown" id="teacherNameDropdown">
                             <!-- LOAD FROM DB !-->
+                            </div>
                         </div>
                     </div>
                 </div>
