@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>UE</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <header class="header text-center">
+                <h1>UE</h1>
+            </header>
+
+            <div class="row my-5 roundborder" id="nav">
+                <nav class="navbar col-lg-12">
+                    <a class="navbar-brand" href="index.html">Index</a>
+                    <a class="navbar-brand" href="person.html">Person</a>
+                    <a class="navbar-brand" href="section.html">Section</a>
+                    <a class="navbar-brand" href="ue.html">UE</a>
+                    <a class="navbar-brand" href="organized_ue.html">Organized UE</a>
+                </nav>
+            </div>
+
+            <div class="row my-5 roundborder" id="search">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="ueName">UE name</label>
+                    <input class="form-control" id="ueName" type="text"/>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="sectionName">Section name</label>
+                    <div class="input-group">
+                        <input class="form-control sectionName" id="sectionName" type="text"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary dropdown-toggle sectionNameDropdownButton" type="button" id="sectionNameDropdownButton" data-toggle="dropdown"></button>
+                            <div class="dropdown-menu scrollable-menu sectionNameDropdown" id="sectionNameDropdown">
+                            <!-- LOAD FROM DB !-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="code">Code</label>
+                    <input class="form-control" id="code" type="text"/>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="nbrOfPeriods">Number of periods</label>
+                    <input class="form-control" id="nbrOfPeriods" type="number"/>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="description">Description</label>
+                    <input class="form-control" id="description" type="text"/>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+                    <label for="teacherLastName">Teacher name (only for search)</label>
+                    <div class="input-group">
+                        <input class="form-control teacherLastName" id="teacherLastName" type="text"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary dropdown-toggle teacherNameDropdownButton" type="button" id="teacherNameDropdownButton" data-toggle="dropdown"></button>
+                            <div class="dropdown-menu scrollable-menu teacherNameDropdown" id="teacherNameDropdown">
+                            <!-- LOAD FROM DB !-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-6 text-center form-group">
+                    <input type="checkbox" class="form-check-input" id="isDecisive">
+                    <label class="form-check-label" for="isDecisive">Decisive</label>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
+                    <button type="submit" class="btn btn-primary btn-block" id="btnAdd">Add</button>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
+                    <button type="submit" class="btn btn-primary btn-block" id="btnSearch">Search</button>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
+                    <button type="submit" class="btn btn-primary btn-block" id="btnListAll">List All</button>
+                </div>
+            </div>
+
+            <div class="row my-5 roundborder">
+                <div class="col-lg-12" id="results-box">
+                    <div class="row my-2">
+                        <div id="member" class="col-lg-12 table-responsive">                            
+                            <table class="table table-striped table-bordered table-hover table-fixed">
+                                <thead>
+                                    <tr>
+                                        <th class="hide">ID</th>
+                                        <th>UE name</th>
+                                        <th>Section</th>
+                                        <th>Code</th>
+                                        <th>Number of periods</th>
+                                        <th>Description</th>
+                                        <th>Decisive</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--AJAX call on db-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" id="details-box"></div>
+                </div>
+            </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script src="./js/ue.js"></script>
+    </body>
+</html>
