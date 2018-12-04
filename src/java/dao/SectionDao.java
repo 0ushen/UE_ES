@@ -109,6 +109,36 @@ public class SectionDao extends DAO<Section> {
         return entityList;
     }
     
+    public Section load(Integer id) {
+        
+        try {
+            // Execute an SQL query on the db and catch his result.
+            String query = "SELECT section_id, name, description, person_id "
+                    + "FROM section "
+                    + "WHERE section_id = ?;";
+            
+            System.out.println("Query in Section load(id) : " + query);
+            
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, id);
+            
+            System.out.println("Prepared statement in Section load(id) : " + st);
+            
+            ResultSet rs = st.executeQuery();
+            
+            /* Execute the query and it's raw results are processed into one
+             * Section entity. That person is put into the entityList. */
+            buildSectionListFromDB(rs);
+            
+        } catch (SQLException | NullPointerException ex) {
+            Logger.getLogger(SectionDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /* entityList now contains the section we searched for, so we return 
+         * the first item in the list. */
+        return entityList.get(0);
+    }
+    
     // Save this Section in the database.
     @Override
     public void save(Section e) {

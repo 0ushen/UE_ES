@@ -7,6 +7,13 @@ $(document).ready(function () {
     INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
     INNER JOIN person ON planning.person_id=person.person_id*/
     
+    /*SELECT DISTINCT person.person_id
+FROM ue
+INNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id
+INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
+INNER JOIN person ON planning.person_id=person.person_id
+WHERE ue.ue_id = 1;*/
+    
     // Servlet url.
     var url = "UEServlet";
     // Representation of a ue
@@ -19,7 +26,7 @@ $(document).ready(function () {
         nbrOfPeriods: '',
         description: '',
         isDecisive: '',
-        teacherLastName: ''
+        listOfTeachers: ''
     };
     // Global variable used to know which event was called last.
     var lastEvent = '';
@@ -193,6 +200,7 @@ $(document).ready(function () {
          * and put into the htmlContent variable .*/
         var htmlContent;
         $.each(response, function(){
+            
             htmlContent += '<tr class="clickable-row" data-href="#">' +
                 '<td class="id hide">' + this.id + '</td>' +
                 '<td class="ueName">' + this.ueName + '</td>' +
@@ -312,14 +320,6 @@ $(document).ready(function () {
                     var input = div.find('.teacherLastName');
                     // Teacher name selected in the dropdown is shown in input field.
                     input.val($(this).html());
-                    
-                    /* The id of the teacher selected in the dropdown is stored
-                     * in the section object or in a variable if it's the dropdown
-                     * from details box. */
-                    if(dropdown.attr('id') === 'teacherNameDropdown')
-                        section["teacherId"] = $(this).data('teacherid');
-                    else if(dropdown.attr('id') === 'teacherNameDropdown-d')
-                        teacherIdToUpdate = $(this).data('teacherid');
                     
                     // Make sure the input is not in red now that it has a value.
                     input.removeClass('is-invalid');
