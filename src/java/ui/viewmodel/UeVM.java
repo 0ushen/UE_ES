@@ -20,7 +20,6 @@ import java.util.ArrayList;
  */
 public class UeVM {
     
-    private static final PersonDao PERSONDAO = new PersonDao();
     private Integer id;
     private String ueName;
     private String sectionName;
@@ -29,7 +28,6 @@ public class UeVM {
     private Integer nbrOfPeriods;
     private String description;
     private boolean isDecisive;
-    private ArrayList<Person> listOfTeachers;
     
     public UeVM() {};
     
@@ -45,7 +43,6 @@ public class UeVM {
         this.nbrOfPeriods = nbrOfPeriods;
         this.description = description == null ? "" : description;
         this.isDecisive = isDecisive;
-        this.listOfTeachers = PERSONDAO.getListOfTeachers(id);
         
     }
     
@@ -62,7 +59,6 @@ public class UeVM {
         this.nbrOfPeriods = ue.getNbrOfPeriods();
         this.description = ue.getDescription();
         this.isDecisive = ue.isDecisive();
-        this.listOfTeachers = PERSONDAO.getListOfTeachers(this.id);
     }
     
     /* Constructor with json. Speed up the process of receiving the json string
@@ -82,7 +78,6 @@ public class UeVM {
             this.nbrOfPeriods = ue.get("nbrOfPeriods").getAsString().equals("") ? null : ue.get("nbrOfPeriods").getAsInt();
             this.description = ue.get("description").getAsString();
             this.isDecisive = ue.get("isDecisive").getAsBoolean();
-            this.listOfTeachers = PERSONDAO.getListOfTeachers(this.id);
         }
     }
     
@@ -163,12 +158,5 @@ public class UeVM {
         this.isDecisive = isDecisive;
     }
 
-    public ArrayList<Person> getListOfTeachers() {
-        return listOfTeachers;
-    }
-
-    public void setListOfTeachers(ArrayList<Person> listOfTeachers) {
-        this.listOfTeachers = listOfTeachers;
-    }
  
 }

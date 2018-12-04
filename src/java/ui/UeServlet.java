@@ -126,7 +126,7 @@ public class UeServlet extends HttpServlet {
                     
                     // Create a Ue entity from the view model.
                     section = sDao.load(ueVM.getSectionId());
-                    Ue ueToUpdate = new Ue(null,
+                    Ue ueToUpdate = new Ue(ueVM.getId(),
                             ueVM.getUeName(), 
                             section,
                             ueVM.getCode(),

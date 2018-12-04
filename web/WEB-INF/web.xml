@@ -16,6 +16,14 @@
         <servlet-name>SectionServlet</servlet-name>
         <url-pattern>/SectionServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UeServlet</servlet-name>
+        <servlet-class>ui.UeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UeServlet</servlet-name>
+        <url-pattern>/UeServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

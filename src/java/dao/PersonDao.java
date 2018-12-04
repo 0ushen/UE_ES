@@ -360,48 +360,5 @@ public class PersonDao extends DAO<Person> {
             Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }
-    
-    // This method returns a list of persons who teaches the ue in parameter.
-    public ArrayList<Person> getListOfTeachers(Integer ueId) {
-        
-        try {
-            String query = "SELECT DISTINCT "
-                    + "person.person_id AS person_id, "
-                    + "person.first_name AS first_name, "
-                    + "person.last_name AS last_name, "
-                    + "person.country AS country, "
-                    + "person.city AS city, "
-                    + "person.postal_code AS postal_code, "
-                    + "person.address AS address, "
-                    + "person.date_of_birth AS date_of_birth, "
-                    + "person.email AS email, "
-                    + "person.is_teacher AS is_teacher, "
-                    + "INNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id "
-                    + "INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id "
-                    + "INNER JOIN person ON planning.person_id=person.person_id "
-                    + "WHERE ue.ue_id = ?;";
-            
-            System.out.println("Query in Ue getListOfTeachers(e) : " + query);
-            
-            PreparedStatement st = conn.prepareStatement(query);
-            st.setInt(1, ueId);
-            
-            System.out.println("Prepared statement in Ue getListOfTeachers(id) : " + st);
-            
-            ResultSet rs = st.executeQuery();
-            
-            /* Execute the query and it's raw results are processed into one or more
-             * Persons entity. Those are put into the entityList. */
-            buildPersonListFromDB(rs);
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(PersonDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return entityList;
-    }
-    
-    
+    } 
 }

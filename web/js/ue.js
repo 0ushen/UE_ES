@@ -15,7 +15,7 @@ INNER JOIN person ON planning.person_id=person.person_id
 WHERE ue.ue_id = 1;*/
     
     // Servlet url.
-    var url = "UEServlet";
+    var url = "UeServlet";
     // Representation of a ue
     var ue = {
         id: '',
@@ -25,8 +25,7 @@ WHERE ue.ue_id = 1;*/
         code: '',
         nbrOfPeriods: '',
         description: '',
-        isDecisive: '',
-        listOfTeachers: ''
+        isDecisive: ''
     };
     // Global variable used to know which event was called last.
     var lastEvent = '';
@@ -37,7 +36,6 @@ WHERE ue.ue_id = 1;*/
     $('#btnAdd').click(doSave);
     $('#btnSearch').click(getSearch);
     $('#btnListAll').click(getAll);
-    $('#teacherNameDropdownButton').click(buildDropdownOfPersons);
     $('#sectionNameDropdownButton').click(buildDropdownOfSections);
     
     // Ask the server to add an ue into the db.
@@ -48,7 +46,7 @@ WHERE ue.ue_id = 1;*/
          * An ue can only be created with a section_id representing its section,
          * and this value is hidden in each tag of the dropdown, so choosing one
          * section from the dropdown is mandatory. */
-        if(ue["sectionId"] === '') {
+        if(ue.sectionId === '') {
             alert('please select a section from the dropdown if you want to add ' + 
                     'an ue');
             $('#sectionName').addClass('is-invalid');
@@ -90,8 +88,11 @@ WHERE ue.ue_id = 1;*/
         inputs.each(function() {
             ue[$(this).attr('id').replace('-d', '')] = $(this).val();
         });
-        ue["id"] = id;
-        ue["sectionId"] = sectionId;
+        ue.id = id;
+        ue.sectionId = sectionId;
+        
+        console.log('ue object in doUpdate');
+        console.log(ue);
 
         // ue object is sent to the server as json.
         var json = JSON.stringify(ue);
@@ -268,7 +269,7 @@ WHERE ue.ue_id = 1;*/
                  * the detail box from the database. */
                 $('#btnDelete').click(function() {doDelete(id);});
                 
-                $('#sectionNameDropdownButton-d').click(buildDropdownOfPersons);
+                $('#sectionNameDropdownButton-d').click(buildDropdownOfSections);
             });
         }
         else{
@@ -285,51 +286,6 @@ WHERE ue.ue_id = 1;*/
         console.log("AJAX error in request : " + JSON.stringify(error, null, 2));
     }
     
-    /* Create a dropdown menu next to a teacher name input field. 
-     * This dropdown will contains all the persons in the person table.*/
-    function buildDropdownOfPersons() {
-        
-        /* Storing the div element containing the input and dropdown button into
-         * a variable */
-        var div = $(this).parent().parent();
-        
-        /* Ajax call to the server. In case of success it will create a dropdown menu
-         * with all the persons stored in the person table in it. */
-        $.ajax({
-            url: "PersonServlet", 
-            data: {Action: "getAll"},
-            success: function(response) {
-                
-                // Storing the dropdown menu element into a variable.
-                var dropdown = div.find('.teacherNameDropdown');
-                
-                //Make sure the dropdown is clean first.
-                dropdown.html('');
-                
-                // Create the dropdown menu from the database person table.
-                var htmlContent = '';
-                $.each(response, function(){
-                    htmlContent += '<a class="dropdown-item" data-teacherid="' +
-                            this.id + '">' + this.lastName + '</a>';
-                });
-                dropdown.html(htmlContent);
-                
-                //
-                $('.dropdown-item').click(function() {
-                    // Storing the input text field element into a variable.
-                    var input = div.find('.teacherLastName');
-                    // Teacher name selected in the dropdown is shown in input field.
-                    input.val($(this).html());
-                    
-                    // Make sure the input is not in red now that it has a value.
-                    input.removeClass('is-invalid');
-                });
-                
-            },
-            error: showAjaxError,
-            dataType: "json"
-        });
-    }
     
     function buildDropdownOfSections() {
         
@@ -362,10 +318,10 @@ WHERE ue.ue_id = 1;*/
                 $('.dropdown-item').click(function() {
                     // Storing the input text field element into a variable.
                     var input = div.find('.sectionName');
-                    // Teacher name selected in the dropdown is shown in input field.
+                    // Section name selected in the dropdown is shown in input field.
                     input.val($(this).html());
                     
-                    /* The id of the teacher selected in the dropdown is stored
+                    /* The id of the section selected in the dropdown is stored
                      * in the section object or in a variable if it's the dropdown
                      * from details box. */
                     if(dropdown.attr('id') === 'sectionNameDropdown')

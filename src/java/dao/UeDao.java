@@ -5,7 +5,6 @@
  */
 package dao;
 
-import entity.Person;
 import entity.Section;
 import entity.Ue;
 import java.sql.PreparedStatement;
@@ -61,14 +60,14 @@ public class UeDao extends DAO<Ue> {
             /* Need to build the query first. Some fields may be empty and should
              * not be put into the query. */
             String query = "SELECT "
-                    + "ue_id, "
+                    + "ue.ue_id, "
                     + "ue.name, "
-                    + "section_id, "
-                    + "section.name"
-                    + "code, "
-                    + "num_of_periods, "
-                    + "description, "
-                    + "is_decisive "
+                    + "ue.section_id, "
+                    + "section.name, "
+                    + "ue.code, "
+                    + "ue.num_of_periods, "
+                    + "ue.description, "
+                    + "ue.is_decisive "
                     + "FROM ue "
                     + "LEFT JOIN section ON ue.section_id = section.section_id "
                     + "WHERE ";
@@ -232,11 +231,11 @@ public class UeDao extends DAO<Ue> {
             // Building the query.
             String query = "UPDATE ue "
                     + "SET "
-                    + "name = ? "
-                    + "section_id = ? "
-                    + "code = ? "
-                    + "num_of_periods = ? "
-                    + "description = ? "
+                    + "name = ?, "
+                    + "section_id = ?, "
+                    + "code = ?, "
+                    + "num_of_periods = ?, "
+                    + "description = ?, "
                     + "is_decisive = ? "
                     + "WHERE ue_id = ?;";
             
@@ -259,6 +258,8 @@ public class UeDao extends DAO<Ue> {
             String description = e.getDescription().equals("") ? null : e.getDescription();
             st.setString(i++, description);
             st.setBoolean(i++, e.isDecisive());
+            System.out.println(e.getId());
+            st.setInt(i++, e.getId());
             
             System.out.println("Prepared Statement in Ue update(e) : " + st);
             
@@ -302,7 +303,7 @@ public class UeDao extends DAO<Ue> {
                 // Create a Ue using the row info.
                 Ue ue = new Ue(
                         rs.getInt("ue_id"),
-                        rs.getString("ue_name"),
+                        rs.getString("name"),
                         section,
                         rs.getString("code"),
                         rs.getInt("num_of_periods"),
