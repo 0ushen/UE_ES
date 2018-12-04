@@ -100,26 +100,20 @@ public class UeDao extends DAO<Ue> {
             
             /* Each field is checked and if it's not empty, it's value is set as
                a parameter in the request. */
-            if(!vm.getUeName().equals("")){
-                st.setString(i, '%' + vm.getUeName() + '%');
-                i++;
-            }
-            if(!vm.getSectionName().equals("")){
-                st.setString(i, '%' + vm.getSectionName() + '%');
-                i++;
-            }
-            if(vm.getCode() != null){
-                st.setString(i, vm.getCode());
-                i++;
-            }
-            if(vm.getNbrOfPeriods() != null){
-                st.setInt(i, vm.getNbrOfPeriods());
-                i++;
-            }
-            if(!vm.getDescription().equals("")){
-                st.setString(i, '%' + vm.getDescription() + '%');
-                i++;
-            }
+            if(!vm.getUeName().equals(""))
+                st.setString(i++, '%' + vm.getUeName() + '%');
+                
+            if(!vm.getSectionName().equals(""))
+                st.setString(i++, '%' + vm.getSectionName() + '%');
+                
+            if(vm.getCode() != null)
+                st.setString(i++, vm.getCode());
+                
+            if(vm.getNbrOfPeriods() != null)
+                st.setInt(i++, vm.getNbrOfPeriods());
+                
+            if(!vm.getDescription().equals(""))
+                st.setString(i++, '%' + vm.getDescription() + '%');
             
             System.out.println("Prepared Statement in Ue load(vm) : " + st);
             
