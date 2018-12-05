@@ -54,7 +54,7 @@ WHERE ue.ue_id = 1;*/
         }
         
         // The ueName is a mandatory input.
-        if(ue.ueName === '') {
+        if($('#ueName').val() === '') {
             alert('please enter a name for the ue.');
             $('#ueName').addClass('is-invalid');
             return;
@@ -88,6 +88,7 @@ WHERE ue.ue_id = 1;*/
         inputs.each(function() {
             ue[$(this).attr('id').replace('-d', '')] = $(this).val();
         });
+        ue.isDecisive = $('#updateForm #isDecisive-d').is(':checked');;
         ue.id = id;
         ue.sectionId = sectionId;
         
@@ -181,6 +182,8 @@ WHERE ue.ue_id = 1;*/
         var inputs = $('#search')
                 .find(':input:not([type=submit]):not([type=checkbox]):not([type=button])');
         inputs.each(function() {
+            console.log($(this).attr('id'));
+            console.log($(this).val());
             ue[$(this).attr('id')] = $(this).val();
         });
         ue.isDecisive = $('#search #isDecisive').is(':checked');
@@ -199,9 +202,10 @@ WHERE ue.ue_id = 1;*/
         
         /* For each section in the server response an html row will be created
          * and put into the htmlContent variable .*/
-        var htmlContent;
+        var htmlContent, yesOrNo;
         $.each(response, function(){
             
+            yesOrNo = this.isDecisive ? 'YES' : 'NO';
             htmlContent += '<tr class="clickable-row" data-href="#">' +
                 '<td class="id hide">' + this.id + '</td>' +
                 '<td class="ueName">' + this.ueName + '</td>' +
@@ -209,7 +213,7 @@ WHERE ue.ue_id = 1;*/
                 '<td class="code">' + this.code + '</td>' +
                 '<td class="nbrOfPeriods">' + this.nbrOfPeriods + '</td>' +
                 '<td class="description">' + this.description + '</td>' +
-                '<td class="isDecisive">' + this.isDecisive + '</td>' + 
+                '<td class="isDecisive">' + yesOrNo + '</td>' + 
                 '<td class="sectionId hide">' + this.sectionId + '</td>' +
                 '</tr>';     
         });
@@ -254,7 +258,12 @@ WHERE ue.ue_id = 1;*/
                 $('#code-d').val(clickedRow.find('.code').html());
                 $('#nbrOfPeriods-d').val(clickedRow.find('.nbrOfPeriods').html());
                 $('#description-d').val(clickedRow.find('.description').html());
-                $('#isDecisive-d').val(clickedRow.find('.isDecisive').html());
+                
+                // Check the box if the ue is decisive
+                if(clickedRow.find('.isDecisive').html() === 'YES')
+                    $('#isDecisive-d').prop('checked', true);
+                else
+                    $('#isDecisive-d').prop('checked', false);
                 
                 var id = clickedRow.find('.id').html();
                 sectionIdToUpdate = clickedRow.find('.sectionId').html();
@@ -270,6 +279,8 @@ WHERE ue.ue_id = 1;*/
                 $('#btnDelete').click(function() {doDelete(id);});
                 
                 $('#sectionNameDropdownButton-d').click(buildDropdownOfSections);
+                
+                
             });
         }
         else{

@@ -67,8 +67,8 @@ $(document).ready(function () {
         inputs.each(function() {
             person[$(this).attr('id').replace('-d', '')] = $(this).val();
         });
-        person["isTeacher"] = $('#updateForm #isTeacher-d').is(':checked');
-        person["id"] = id;
+        person.isTeacher = $('#updateForm #isTeacher-d').is(':checked');
+        person.id = id;
 
         // Person object is sent to the server as json.
         var json = JSON.stringify(person);

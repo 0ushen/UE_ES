@@ -85,10 +85,12 @@ public class UeDao extends DAO<Ue> {
                 query += "num_of_periods = ? AND ";
                 
             if(!vm.getDescription().equals(""))
-                query += "LOWER(description) LIKE LOWER(?) AND ";
+                query += "LOWER(ue.description) LIKE LOWER(?) AND ";
             
-            // Make sure the query does not end with AND.
-            query = query.substring(0, query.length() - 5) + ";";
+            query+= "is_decisive = ?;";
+            
+            /*// Make sure the query does not end with AND.
+            query = query.substring(0, query.length() - 5) + ";";*/
             
             System.out.println("Query in Ue load(vm) : " + query);
             
@@ -102,18 +104,20 @@ public class UeDao extends DAO<Ue> {
                a parameter in the request. */
             if(!vm.getUeName().equals(""))
                 st.setString(i++, '%' + vm.getUeName() + '%');
-                
+
             if(!vm.getSectionName().equals(""))
                 st.setString(i++, '%' + vm.getSectionName() + '%');
-                
-            if(vm.getCode() != null)
+
+            if(!vm.getCode().equals(""))
                 st.setString(i++, vm.getCode());
-                
+;
             if(vm.getNbrOfPeriods() != null)
                 st.setInt(i++, vm.getNbrOfPeriods());
-                
+
             if(!vm.getDescription().equals(""))
                 st.setString(i++, '%' + vm.getDescription() + '%');
+
+            st.setBoolean(i++, vm.isDecisive());
             
             System.out.println("Prepared Statement in Ue load(vm) : " + st);
             
@@ -183,7 +187,7 @@ public class UeDao extends DAO<Ue> {
                     + "code, "
                     + "num_of_periods, "
                     + "description, "
-                    + "is_decisive "
+                    + "is_decisive) "
                     + "VALUES (?, ?, ?, ?, ?, ?);";
             
             System.out.println("Query in Ue save(e) : " + query);
