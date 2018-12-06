@@ -8,11 +8,11 @@ $(document).ready(function () {
     INNER JOIN person ON planning.person_id=person.person_id*/
     
     /*SELECT DISTINCT person.person_id
-FROM ue
-INNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id
-INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
-INNER JOIN person ON planning.person_id=person.person_id
-WHERE ue.ue_id = 1;*/
+    FROM ue
+    INNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id
+    INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
+    INNER JOIN person ON planning.person_id=person.person_id
+    WHERE ue.ue_id = 1;*/
     
     // Servlet url.
     var url = "UeServlet";
@@ -265,20 +265,27 @@ WHERE ue.ue_id = 1;*/
                 else
                     $('#isDecisive-d').prop('checked', false);
                 
-                var id = clickedRow.find('.id').html();
+                var ueId = clickedRow.find('.id').html();
                 sectionIdToUpdate = clickedRow.find('.sectionId').html();
                 
                 /* This update event send data in the details form to the 
                  * server.
                  * The server will then update this section details based on
                  * what the user typed in the form. */
-                $('#btnUpdate').click(function() {doUpdate(id, sectionIdToUpdate);});
+                $('#btnUpdate').click(function() {doUpdate(ueId, sectionIdToUpdate);});
 
                 /* This event will ask the server to delete the section in 
                  * the detail box from the database. */
-                $('#btnDelete').click(function() {doDelete(id);});
+                $('#btnDelete').click(function() {doDelete(ueId);});
                 
                 $('#sectionNameDropdownButton-d').click(buildDropdownOfSections);
+                $('#capacityNameDropdownButton-d').click(buildDropdownOfCapacities);
+                
+                $('#btnShowCapacities, #btnHideCapacities').click(function() {
+                    $('.custom-toggle').toggleClass('hide');
+                });
+                
+                buildCapacities(ueId);
                 
                 
             });
@@ -345,6 +352,86 @@ WHERE ue.ue_id = 1;*/
                 });
                 
             },
+            error: showAjaxError,
+            dataType: "json"
+        });
+    }
+    
+    function buildDropdownOfCapacities() {
+        
+        /* Storing the div element containing the input and dropdown button into
+         * a variable */
+        var div = $(this).parent().parent();
+        
+        /* Ajax call to the server. In case of success it will create a dropdown menu
+         * with all the capacities stored in the person table in it. */
+        $.ajax({
+            url: "CapacityServlet", 
+            data: {Action: "getAll"},
+            success: function(response) {
+                
+                // Storing the dropdown menu element into a variable.
+                var dropdown = div.find('.capacityNameDropdown');
+                
+                //Make sure the dropdown is clean first.
+                dropdown.html('');
+                
+                // Create the dropdown menu from the database capacity table.
+                var htmlContent = '';
+                $.each(response, function(){
+                    htmlContent += '<a class="dropdown-item" data-capacityid="' +
+                            this.id + '">' + this.capacityName + '</a>';
+                });
+                dropdown.html(htmlContent);
+                
+                //
+                $('.dropdown-item').click(function() {
+                    // Storing the input text field element into a variable.
+                    var input = div.find('.capacityName');
+                    // Capacity name selected in the dropdown is shown in input field.
+                    input.val($(this).html());
+                    
+                    /* The id of the capacity selected in the dropdown is stored
+                     * in a variable. */
+                    capacityId = $(this).data('capacityid');
+                    
+                    // Make sure the input is not in red now that it has a value.
+                    input.removeClass('is-invalid');
+                });
+                
+            },
+            error: showAjaxError,
+            dataType: "json"
+        });
+    }
+    
+    function buildCapacities(ueId) {
+        
+        $.ajax({
+            url: "UeServlet", 
+            data: {Action: "getC", ueId : ueId},
+            success: function(response) {
+                console.log(this);
+                var htmlContent;
+                $.each(response, function(){
+                    htmlContent += '<a href="#" class="list-group-item list-group-item-action list-group-item-primary">' +
+                                    '<div class="row">' + 
+                                    '<div class="col-lg-10">' + 
+                                    '<span>' + this.capacityName + '</span>' + 
+                                    '</div>' + 
+                                    '<div class="col-lg-2">' + 
+                                    '<button type="button" class="close" aria-label="Close">' + 
+                                    '<span aria-hidden="true">&times;</span>' +
+                                    '</button>' + 
+                                    '</div>' + 
+                                    '</div>' + 
+                                    '</a>';
+                });
+                
+                $('#capacityList').html(htmlContent);
+                
+            },
+                
             error: showAjaxError,
             dataType: "json"
         });

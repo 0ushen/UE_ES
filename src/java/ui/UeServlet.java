@@ -56,6 +56,7 @@ public class UeServlet extends HttpServlet {
         String jsonList;
         UeVM ueVM;
         Section section;
+        Integer id;
         
         // If action parameter is present a switch will handle what to do.
         if(action != null){
@@ -142,13 +143,13 @@ public class UeServlet extends HttpServlet {
                 // Delete the ue matching the id received.    
                 case "doDelete" :
                     
-                    Integer id = Integer.parseInt(request.getParameter("id"));
+                    id = Integer.parseInt(request.getParameter("id"));
                     
                     // Performs the delete.
                     ueDao.delete(id);
                     
                     break;
-                
+                    
                 default :
                     System.out.println("Wrong Action parameter : " + action);
             }

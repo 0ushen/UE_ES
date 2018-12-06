@@ -9,8 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dao.PersonDao;
-import entity.Person;
 import entity.Ue;
 import java.util.ArrayList;
 

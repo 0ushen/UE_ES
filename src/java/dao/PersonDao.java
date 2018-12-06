@@ -22,9 +22,18 @@ public class PersonDao extends DAO<Person> {
         
         try {
             // Execute an SQL query on the db and catch his result.
-            ResultSet rs = conn.createStatement().executeQuery("SELECT person_id, first_name, last_name, country, city, "
-                  + "postal_code, address, date_of_birth, email, is_teacher "
-                  + "FROM person");
+            ResultSet rs = conn.createStatement().executeQuery("SELECT "
+                    + "person_id, "
+                    + "first_name, "
+                    + "last_name, "
+                    + "country, "
+                    + "city, "
+                    + "postal_code, "
+                    + "address, "
+                    + "date_of_birth, "
+                    + "email, "
+                    + "is_teacher "
+                    + "FROM person");
             
             /* Results coming raw from the database will be processed into one or
              * more Person entities which will be added into entityList. */
@@ -154,11 +163,19 @@ public class PersonDao extends DAO<Person> {
         
         try {
             // Execute an SQL query on the db and catch his result.
-            String query =
-                    "SELECT person_id, first_name, last_name, country, city, "
-                  + "postal_code, address, date_of_birth, email, is_teacher "
-                  + "FROM person "
-                  + "WHERE person_id = ?;";
+            String query = "SELECT "
+                    + "person_id, "
+                    + "first_name, "
+                    + "last_name, "
+                    + "country, "
+                    + "city, "
+                    + "postal_code, "
+                    + "address, "
+                    + "date_of_birth, "
+                    + "email, "
+                    + "is_teacher "
+                    + "FROM person "
+                    + "WHERE person_id = ?;";
             
             System.out.println("Query in Person load(id) : " + query);
             

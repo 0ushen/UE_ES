@@ -24,6 +24,14 @@
         <servlet-name>UeServlet</servlet-name>
         <url-pattern>/UeServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CapacityServlet</servlet-name>
+        <servlet-class>ui.CapacityServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CapacityServlet</servlet-name>
+        <url-pattern>/CapacityServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

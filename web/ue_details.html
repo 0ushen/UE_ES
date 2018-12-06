@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div class="row my-2" id="updateForm">
+<div class="row my-2 custom-toggle" id="updateForm">
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 form-group">
         <label for="ueName-d">UE name</label>
         <input class="form-control" id="ueName-d" type="text"/>
@@ -32,12 +32,35 @@
         <input type="checkbox" class="form-check-input" id="isDecisive-d">
         <label class="form-check-label" for="isDecisive-d">Decisive</label>
     </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center form-group">
+        <button type="submit" class="btn btn-primary btn-block" id="btnShowCapacities">Show Capacities</button>
+    </div>
 </div>
-<div class="row my-2" id="buttons">
+<div class="row my-2 custom-toggle" id="buttons">
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center form-group">
         <button type="submit" class="btn btn-primary btn-block" id="btnUpdate">Update</button>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center form-group">
         <button type="submit" class="btn btn-primary btn-block" id="btnDelete">Delete</button>
+    </div>
+</div>
+<div class="row my-2 hide custom-toggle" id="capacities">
+    <div class="list-group col-xs-12 col-sm-6 col-md-6 col-lg-6 offset-lg-1" id="capacityList">
+        <!-- LOAD FROM DB !-->
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 form-group">
+        <label for="capacityName-d">Capacity name</label>
+        <div class="input-group form-group">
+            <input class="form-control capacityName" id="capacityName-d" type="text"/>
+            <div class="input-group-append">
+                <button class="btn btn-primary dropdown-toggle capacityNameDropdownButton" type="button" id="capacityNameDropdownButton-d" data-toggle="dropdown"></button>
+                <div class="dropdown-menu scrollable-menu capacityNameDropdown" id="capacityNameDropdown-d">
+                <!-- LOAD FROM DB !-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block" id="btnHideCapacities">Hide Capacities</button>
+        </div>
     </div>
 </div>

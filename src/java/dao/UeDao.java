@@ -79,15 +79,15 @@ public class UeDao extends DAO<Ue> {
                 query += "LOWER(section.name) LIKE LOWER(?) AND ";
             
             if(!vm.getCode().equals(""))
-                query += "code = ? AND ";
+                query += "ue.code = ? AND ";
                 
             if(vm.getNbrOfPeriods() != null)
-                query += "num_of_periods = ? AND ";
+                query += "ue.num_of_periods = ? AND ";
                 
             if(!vm.getDescription().equals(""))
                 query += "LOWER(ue.description) LIKE LOWER(?) AND ";
             
-            query+= "is_decisive = ?;";
+            query += "ue.is_decisive = ?;";
             
             /*// Make sure the query does not end with AND.
             query = query.substring(0, query.length() - 5) + ";";*/

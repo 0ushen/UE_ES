@@ -78,18 +78,14 @@ public class SectionDao extends DAO<Section> {
             
             /* Each field is checked and if it's not empty, it's value is set as
                a parameter in the request. */
-            if(!vm.getSectionName().equals("")){
-                st.setString(i, '%' + vm.getSectionName() + '%');
-                i++;
-            }
-            if(!vm.getDescription().equals("")){
-                st.setString(i, '%' + vm.getDescription() + '%');
-                i++;
-            }
-            if(!vm.getTeacherLastName().equals("")){
-                st.setString(i, '%' + vm.getTeacherLastName() + '%');
-                i++;
-            }
+            if(!vm.getSectionName().equals(""))
+                st.setString(i++, '%' + vm.getSectionName() + '%');
+            
+            if(!vm.getDescription().equals(""))
+                st.setString(i++, '%' + vm.getDescription() + '%');
+            
+            if(!vm.getTeacherLastName().equals(""))
+                st.setString(i++, '%' + vm.getTeacherLastName() + '%');
             
             System.out.println("Prepared Statement in Section load(vm) : " + st);
             
