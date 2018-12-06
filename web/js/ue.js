@@ -1,19 +1,5 @@
 $(document).ready(function () {
     
-    /*SELECT ue.name, ue.code, ue.num_of_periods, ue.is_decisive, section.name, person.last_name
-    FROM ue
-    INNER JOIN section ON ue.section_id=section.section_id
-    iNNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id
-    INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
-    INNER JOIN person ON planning.person_id=person.person_id*/
-    
-    /*SELECT DISTINCT person.person_id
-    FROM ue
-    INNER JOIN organized_ue ON organized_ue.ue_id=ue.ue_id
-    INNER JOIN planning ON organized_ue.organized_ue_id=planning.organized_ue_id
-    INNER JOIN person ON planning.person_id=person.person_id
-    WHERE ue.ue_id = 1;*/
-    
     // Servlet url.
     var url = "UeServlet";
     // Representation of a ue
@@ -31,6 +17,8 @@ $(document).ready(function () {
     var lastEvent = '';
     // Global variable used to store the section id to update.
     var sectionIdToUpdate;
+    // Global variable used to store the capacity id to update.
+    var capacityId;
     
     // Event handlers for the 4 buttons in the search box form.
     $('#btnAdd').click(doSave);
@@ -280,6 +268,7 @@ $(document).ready(function () {
                 
                 $('#sectionNameDropdownButton-d').click(buildDropdownOfSections);
                 $('#capacityNameDropdownButton-d').click(buildDropdownOfCapacities);
+                $('#btnAddCapacity').click(function() {addCapacityToUe(capacityId, ueId);})
                 
                 $('#btnShowCapacities, #btnHideCapacities').click(function() {
                     $('.custom-toggle').toggleClass('hide');
@@ -405,22 +394,27 @@ $(document).ready(function () {
         });
     }
     
+    // This will create a list of capacities element in the detail box.
     function buildCapacities(ueId) {
+        // Making sure it is empty first
+        $('#capacityList').html('');
         
         $.ajax({
-            url: "UeServlet", 
+            url: "CapacityServlet", 
             data: {Action: "getC", ueId : ueId},
             success: function(response) {
-                console.log(this);
-                var htmlContent;
+                var htmlContent = '';
                 $.each(response, function(){
-                    htmlContent += '<a href="#" class="list-group-item list-group-item-action list-group-item-primary">' +
+                    // For each capacity i create a html element.
+                    htmlContent += '<a class="list-group-item list-group-item-action list-group-item-primary">' +
                                     '<div class="row">' + 
                                     '<div class="col-lg-10">' + 
                                     '<span>' + this.capacityName + '</span>' + 
                                     '</div>' + 
                                     '<div class="col-lg-2">' + 
-                                    '<button type="button" class="close" aria-label="Close">' + 
+                                    '<button type="button" class="close" aria-label="Close" data-capacityid="' + 
+                                    this.id + 
+                                    '">' + 
                                     '<span aria-hidden="true">&times;</span>' +
                                     '</button>' + 
                                     '</div>' + 
@@ -428,13 +422,52 @@ $(document).ready(function () {
                                     '</a>';
                 });
                 
+                // Then i add it to the detail box.
                 $('#capacityList').html(htmlContent);
+                
+                /* When the user click on the close button on one of these 
+                 * capacities, that capacity is deleted from the list and from 
+                 * the database.  */
+                $('.close').click(function() {deleteCapacity($(this).data('capacityid'), ueId)});
                 
             },
                 
             error: showAjaxError,
             dataType: "json"
         });
+    }
+    
+    // This function will link the capacity in param to the ue in param.
+    function addCapacityToUe(capacityId, ueId) {
+        
+        $.ajax({
+            url: "CapacityServlet", 
+            data: {Action: "addCapacityToUe", capacityId: capacityId, ueId : ueId},
+            success: function() {
+                console.log('Capacity : ' + $('#capacityName-d').val() + 
+                        ' was linked to UE : ' + $('#ueName-d').val());
+                // Refresh the list of capacities
+                buildCapacities(ueId);
+            },
+            error: showAjaxError
+        });
+    }
+    
+    // Delete the capacity in param from the database.
+    function deleteCapacity(capacityId, ueId) {
+        
+        $.ajax({
+            url: "CapacityServlet", 
+            data: {Action: "deleteCapacity", capacityId: capacityId},
+            success: function() {
+                console.log('Capacity : ' + $('#capacityName-d').val() + 
+                        ' was linked from the db');
+                // Refresh the list of capacities
+                buildCapacities(ueId);
+            },
+            error: showAjaxError
+        });
+        
     }
 });
 

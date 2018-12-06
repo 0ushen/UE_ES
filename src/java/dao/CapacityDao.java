@@ -92,6 +92,20 @@ public class CapacityDao extends DAO<Capacity> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    // Delete a a specific capacity from entityList and the db.
+    @Override
+    public void delete(Capacity e) {
+        setDeleteCommand("DELETE FROM capacity WHERE capacity_id = ?;");
+        super.delete(e);
+    }
+    
+    // Delete a specific capacity from entityList and the db using an id directly.
+    @Override
+    public void delete(Integer id) {
+        setDeleteCommand("DELETE FROM capacity WHERE capacity_id = ?;");
+        super.delete(id);
+    }
+    
     /* This function will build a list of Capacities 
      * (protected variable entityList from the parent class DAO) using the raw 
      * data coming from the db. */   
@@ -131,6 +145,29 @@ public class CapacityDao extends DAO<Capacity> {
             Logger.getLogger(CapacityDao.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public void addCapacityToUe(Integer capacityId, Integer ueId) {
+        
+        try {
+            // Execute an SQL query on the db and catch his result.
+           String query = "UPDATE capacity "
+                    + "SET ue_id = ? "
+                    + "WHERE capacity_id = ?;";
+           
+            System.out.println("Query in Capacity addCapacityToUe(capacityId, ueId) : " + query);
+            
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, ueId);
+            st.setInt(2, capacityId);
+            
+            System.out.println("Prepared statement in addCapacityToUe(capacityId, ueId) : " + st);
+            
+            st.executeUpdate();
+            
+        } catch (SQLException | NullPointerException ex) {
+            Logger.getLogger(SectionDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

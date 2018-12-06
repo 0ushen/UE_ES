@@ -42,7 +42,7 @@ public class CapacityServlet extends HttpServlet {
         /* list will contain data the database returned and will be sent to 
          * the client as a json string. */
         String jsonList;
-        Integer ueId;
+        Integer ueId, capacityId;
         ArrayList<Capacity> list;
         
         // If action parameter is present a switch will handle what to do.
@@ -74,6 +74,23 @@ public class CapacityServlet extends HttpServlet {
                     jsonList = new Gson().toJson(list);
                     
                     WriteResponse(response, jsonList);
+                    
+                    break;
+                    
+                case "deleteCapacity" : 
+                    
+                    capacityId = Integer.parseInt(request.getParameter("capacityId"));
+                    
+                    cDao.delete(capacityId);
+                    
+                    break;
+                    
+                case "addCapacityToUe" :
+                    
+                    ueId = Integer.parseInt(request.getParameter("ueId"));
+                    capacityId = Integer.parseInt(request.getParameter("capacityId"));
+                    
+                    cDao.addCapacityToUe(capacityId, ueId);
                     
                     break;
                 
