@@ -111,7 +111,7 @@ $(document).ready(function () {
                 /* Empty the details box, hide it and then refresh the data 
                  * in the table */
                 $('#details-box').html('');
-                $('#results-box').toggleClass('col-lg-12 col-lg-6');
+                $('#results-box').toggleClass('col-xl-12 col-xl-6');
                 refresh();
             },
             error: showAjaxError
@@ -231,7 +231,7 @@ $(document).ready(function () {
             
             /* Results box is cut in half in order to show the detail box 
              * next to it on big screens */
-            $('#results-box').toggleClass('col-lg-12 col-lg-6');
+            $('#results-box').toggleClass('col-xl-12 col-xl-6');
 
             /* Load the details from the row the user clicked on in a form .
              * Data can be changed directly in the database via this 
@@ -283,7 +283,7 @@ $(document).ready(function () {
              * the detail box html content is emptied and the table takes all
              * the width possible on large screens */
             $('#details-box').html('');
-            $('#results-box').toggleClass('col-lg-12 col-lg-6');
+            $('#results-box').toggleClass('col-xl-12 col-xl-6');
         }
     }
     
@@ -407,10 +407,10 @@ $(document).ready(function () {
                     // For each capacity i create a html element.
                     htmlContent += '<a class="list-group-item list-group-item-action list-group-item-primary">' +
                                     '<div class="row">' + 
-                                    '<div class="col-lg-10">' + 
+                                    '<div class="col-xl-10">' + 
                                     '<span>' + this.capacityName + '</span>' + 
                                     '</div>' + 
-                                    '<div class="col-lg-2">' + 
+                                    '<div class="col-xl-2">' + 
                                     '<button type="button" class="close" aria-label="Close" data-capacityid="' + 
                                     this.id + 
                                     '">' + 
