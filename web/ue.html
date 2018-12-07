@@ -23,55 +23,60 @@
                     <a class="navbar-brand" href="person.html">Person</a>
                     <a class="navbar-brand" href="section.html">Section</a>
                     <a class="navbar-brand" href="ue.html">UE</a>
-                    <a class="navbar-brand" href="organized_ue.html">Organized UE</a>
                 </nav>
             </div>
 
             <div class="row my-5 roundborder" id="search">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="ueName">UE name</label>
-                    <input class="form-control" id="ueName" type="text"/>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="sectionName">Section name</label>
-                    <div class="input-group">
-                        <input class="form-control sectionName" id="sectionName" type="text"/>
-                        <div class="input-group-append">
-                            <button class="btn btn-primary dropdown-toggle sectionNameDropdownButton" type="button" id="sectionNameDropdownButton" data-toggle="dropdown"></button>
-                            <div class="dropdown-menu scrollable-menu sectionNameDropdown" id="sectionNameDropdown">
-                            <!-- LOAD FROM DB !-->
+                <div class="col-lg-12">
+                    <div class="row my-2">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="ueName">UE name</label>
+                            <input class="form-control" id="ueName" type="text"/>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="sectionName">Section name</label>
+                            <div class="input-group">
+                                <input class="form-control sectionName" id="sectionName" type="text"/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary dropdown-toggle sectionNameDropdownButton" type="button" id="sectionNameDropdownButton" data-toggle="dropdown"></button>
+                                    <div class="dropdown-menu scrollable-menu sectionNameDropdown" id="sectionNameDropdown">
+                                    <!-- LOAD FROM DB !-->
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="code">Code</label>
+                            <input class="form-control" id="code" type="text"/>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="nbrOfPeriods">Number of periods</label>
+                            <input class="form-control" id="nbrOfPeriods" type="number"/>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="description">Description</label>
+                            <input class="form-control" id="description" type="text"/>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 form-group">
+                            <label for="capacity">Capacity</label>
+                            <input class="form-control" id="capacity" type="text"/>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="code">Code</label>
-                    <input class="form-control" id="code" type="text"/>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="nbrOfPeriods">Number of periods</label>
-                    <input class="form-control" id="nbrOfPeriods" type="number"/>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="description">Description</label>
-                    <input class="form-control" id="description" type="text"/>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
-                    <label for="capacity">Capacity</label>
-                    <input class="form-control" id="capacity" type="text"/>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center form-group">
-                    <input type="checkbox" class="form-check-input" id="isDecisive">
-                    <label class="form-check-label" for="isDecisive">Decisive</label>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
-                    <button type="submit" class="btn btn-primary btn-block" id="btnAdd">Add</button>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
-                    <button type="submit" class="btn btn-primary btn-block" id="btnSearch">Search</button>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 text-center form-group">
-                    <button type="submit" class="btn btn-primary btn-block" id="btnListAll">List All</button>
+                    <div class="row my-2">
+                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-3 text-center form-group">
+                            <input type="checkbox" class="form-check-input" id="isDecisive">
+                            <label class="form-check-label" for="isDecisive">Decisive</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center form-group">
+                            <button type="submit" class="btn btn-primary btn-block" id="btnAdd">Add</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center form-group">
+                            <button type="submit" class="btn btn-primary btn-block" id="btnSearch">Search</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center form-group">
+                            <button type="submit" class="btn btn-primary btn-block" id="btnListAll">List All</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

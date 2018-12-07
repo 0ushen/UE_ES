@@ -57,7 +57,17 @@ public class UeDao extends DAO<Ue> {
     public ArrayList<Ue> load(UeVM vm) {
         
         try {
-            /* Need to build the query first. Some fields may be empty and should
+            /* If the user used capacity as a search criteria i will need to
+             * change the query. */
+            String innerjoin, where, column;
+            innerjoin = where = column = "";
+            if(!vm.getCapacity().equals("")) {
+                column = "capacity.name, ";
+                innerjoin = "INNER JOIN capacity ON ue.ue_id = capacity.ue_id ";
+                where = "LOWER(capacity.name) LIKE LOWER(?) AND ";
+            }  
+            
+            /* Building the query. Some fields may be empty and should
              * not be put into the query. */
             String query = "SELECT "
                     + "ue.ue_id, "
@@ -67,10 +77,14 @@ public class UeDao extends DAO<Ue> {
                     + "ue.code, "
                     + "ue.num_of_periods, "
                     + "ue.description, "
+                    + column
                     + "ue.is_decisive "
                     + "FROM ue "
+                    + innerjoin
                     + "LEFT JOIN section ON ue.section_id = section.section_id "
                     + "WHERE ";
+            
+            query += where;
             
             if(!vm.getUeName().equals(""))
                 query += "LOWER(ue.name) LIKE LOWER(?) AND ";
@@ -102,6 +116,9 @@ public class UeDao extends DAO<Ue> {
             
             /* Each field is checked and if it's not empty, it's value is set as
                a parameter in the request. */
+            if(!vm.getCapacity().equals(""))
+                st.setString(i++, '%' + vm.getCapacity() + '%');
+                
             if(!vm.getUeName().equals(""))
                 st.setString(i++, '%' + vm.getUeName() + '%');
 

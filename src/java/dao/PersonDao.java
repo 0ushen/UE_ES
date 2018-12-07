@@ -83,13 +83,13 @@ public class PersonDao extends DAO<Person> {
                 query += "postal_code = ? AND ";
                 
             if(!vm.getAddress().equals(""))
-                query += "address = ? AND ";
+                query += "LOWER(address) LIKE LOWER(?) AND ";
                   
             if(!vm.getDateOfBirth().equals(""))
                 query += "date_of_birth = ? AND ";
                 
             if(!vm.getEmail().equals(""))
-                query += "email = ? AND ";
+                query += "LOWER(email) LIKE LOWER(?) AND ";
             
             /* From my view , whether a person is a teacher or not is always
              * mentionned. (not ideal) */
@@ -126,7 +126,7 @@ public class PersonDao extends DAO<Person> {
                 i++;
             }
             if(!vm.getAddress().equals("")){
-                st.setString(i, vm.getAddress());
+                st.setString(i, "%" + vm.getAddress() + "%");
                 i++;
             }      
             if(!vm.getDateOfBirth().equals("")){
@@ -134,7 +134,7 @@ public class PersonDao extends DAO<Person> {
                 i++;
             }
             if(!vm.getEmail().equals("")){
-                st.setString(i, vm.getEmail());
+                st.setString(i, "%" + vm.getEmail() + "%");
                 i++;
             }
             

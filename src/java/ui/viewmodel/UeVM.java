@@ -26,6 +26,7 @@ public class UeVM {
     private Integer nbrOfPeriods;
     private String description;
     private boolean isDecisive;
+    private String capacity;
     
     public UeVM() {};
     
@@ -76,6 +77,7 @@ public class UeVM {
             this.nbrOfPeriods = ue.get("nbrOfPeriods").getAsString().equals("") ? null : ue.get("nbrOfPeriods").getAsInt();
             this.description = ue.get("description").getAsString();
             this.isDecisive = ue.get("isDecisive").getAsBoolean();
+            this.capacity = ue.get("capacity").getAsString();
         }
     }
     
@@ -155,6 +157,16 @@ public class UeVM {
     public void setIsDecisive(boolean isDecisive) {
         this.isDecisive = isDecisive;
     }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+    
+    
 
  
 }

@@ -11,7 +11,8 @@ $(document).ready(function () {
         code: '',
         nbrOfPeriods: '',
         description: '',
-        isDecisive: ''
+        isDecisive: '',
+        capacity: ''
     };
     // Global variable used to know which event was called last.
     var lastEvent = '';
@@ -169,9 +170,7 @@ $(document).ready(function () {
         
         var inputs = $('#search')
                 .find(':input:not([type=submit]):not([type=checkbox]):not([type=button])');
-        inputs.each(function() {
-            console.log($(this).attr('id'));
-            console.log($(this).val());
+        inputs.each(function() {;
             ue[$(this).attr('id')] = $(this).val();
         });
         ue.isDecisive = $('#search #isDecisive').is(':checked');
